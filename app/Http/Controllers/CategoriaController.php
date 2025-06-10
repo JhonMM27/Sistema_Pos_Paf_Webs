@@ -11,19 +11,27 @@ class CategoriaController extends Controller
 {
     public function index(Request $request)
     {
+        $texto = $request->get('texto');
+        $estado = $request->get('estado');
 
-        $texto = $request->get('texto', '');  // Default to empty string if 'texto' is not provided
-
-        // Query to filter based on 'nombre' or 'id'
-        $registros = Categoria::when($texto, function ($query) use ($texto) {
-            return $query->where('nombre', 'LIKE', '%' . $texto . '%')
-                ->orWhere('id', 'LIKE', '%' . $texto . '%');
-        })
+        $registros = Categoria::query()
+            ->when($texto, function ($query) use ($texto) {
+                $query->where(function ($q) use ($texto) {
+                    $q->where('nombre', 'LIKE', '%' . $texto . '%')
+                        ->orWhere('id', 'LIKE', '%' . $texto . '%');
+                });
+            })
+            ->when($estado !== null && $estado !== '', function ($query) use ($estado) {
+                $query->where('estado', $estado);
+            })
             ->orderBy('id', 'desc')
-            ->paginate(10);
+            ->paginate(10)
+            ->appends($request->query());
 
-        return view('categoria.index', compact('registros', 'texto'));
+        return view('categoria.index', compact('registros'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -42,16 +50,13 @@ class CategoriaController extends Controller
         $registro->estado = $request->input('estado');
         $registro->save();
 
-        return redirect()->route('categorias.index')->with('mensaje','Nuevo Registro [ '.$registro->nombre.' ] se agregó con exito');
+        return redirect()->route('categorias.index')->with('mensaje', 'Nuevo Registro [ ' . $registro->nombre . ' ] se agregó con exito');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Categoria $categoria)
-    {
-        //
-    }
+    public function show(Categoria $categoria) {}
 
     /**
      * Show the form for editing the specified resource.
