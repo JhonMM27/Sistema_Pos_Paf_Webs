@@ -45,7 +45,26 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'email|unique:users,email',
+            'password' => 'min:6'
+            // 'roles' => 'required'
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'documento' => $request->documento,
+            'direccion' => $request->direccion,
+            'telefono' => $request->telefono,
+            'TipoUsuario_id' => $request->TipoUsuario_id ?: 2, // Default to 2 if not provided
+        ]);
+        $user->syncRoles($request->roles);
+        $user->syncPermissions($request->permissions);
+
+        return redirect()->route('configuracion.index')->with('success', 'Usuario creado correctamente');
     }
 
     /**

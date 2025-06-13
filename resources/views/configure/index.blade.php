@@ -2,27 +2,22 @@
 @section('contenido')
     @push('estilos')
         <style>
-            /* Estilos personalizados para complementar Tailwind */
-            .modal-fade {
-                animation: fadeIn 0.3s ease-in-out;
+            /* Transiciones suaves para elementos interactivos */
+            .transition-smooth {
+                transition: all 0.3s ease;
             }
-
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(-20px);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
+            
+            /* Efecto hover para filas de tabla */
+            .table-row-hover:hover {
+                background-color: #f8fafc;
             }
-
+            
+            /* Estilo para pestañas activas */
             .tab-active {
                 position: relative;
+                color: #3b82f6;
             }
-
+            
             .tab-active:after {
                 content: '';
                 position: absolute;
@@ -32,60 +27,106 @@
                 height: 3px;
                 background-color: #3b82f6;
                 border-radius: 3px 3px 0 0;
+                animation: slideIn 0.3s ease-out;
             }
-
-            .file-upload {
-                position: relative;
-                overflow: hidden;
+            
+            @keyframes slideIn {
+                from { transform: scaleX(0); }
+                to { transform: scaleX(1); }
             }
-
-            .file-upload-input {
-                position: absolute;
-                font-size: 100px;
-                opacity: 0;
-                right: 0;
-                top: 0;
-                cursor: pointer;
+            
+            /* Estilo para badges de estado */
+            .badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 0.25rem 0.5rem;
+                border-radius: 9999px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                line-height: 1;
+            }
+            
+            .badge-employee {
+                background-color: #dbeafe;
+                color: #1d4ed8;
+            }
+            
+            .badge-client {
+                background-color: #dcfce7;
+                color: #166534;
+            }
+            
+            /* Efecto para botones de acción */
+            .action-btn {
+                padding: 0.4rem;
+                border-radius: 0.375rem;
+                transition: all 0.2s;
+            }
+            
+            .action-btn:hover {
+                transform: translateY(-1px);
+            }
+            
+            .edit-btn {
+                color: #3b82f6;
+            }
+            
+            .edit-btn:hover {
+                background-color: #eff6ff;
+            }
+            
+            .delete-btn {
+                color: #ef4444;
+            }
+            
+            .delete-btn:hover {
+                background-color: #fef2f2;
+            }
+            
+            /* Scroll personalizado */
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 10px;
+            }
+            
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 10px;
+            }
+            
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: #94a3b8;
             }
         </style>
     @endpush
 
-
-    <div class="w-full px-2.5 py-2.5">
-        {{-- <!-- Header -->
-        <header class="bg-white shadow-sm">
-            <div class="w-full mx-auto px-6 py-4 flex justify-between items-center">
-                <h1 class="text-xl font-bold text-gray-900">Panel de Administración</h1>
-            </div>
-        </header> --}}
-
+    <div class="w-full px-4 py-6">
         <!-- Main Content -->
-        <main class="w-full px-6 md:px-10 py-8">
-            <div class="bg-white shadow rounded-lg overflow-hidden">
-
-
-
+        <main class="w-full px-4 md:px-6 py-6">
+            <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100">
                 <!-- Tabs Navigation -->
-                <div class="border-b border-gray-200">
-                    <div class="w-full mx-auto px-6 pt-4 flex justify-between items-center">
-                        <h1 class="text-xl font-bold text-gray-900">Panel de Administración</h1>
+                <div class="border-b border-gray-200 bg-white">
+                    <div class="px-6 pt-4 pb-2 flex justify-between items-center">
+                        <h1 class="text-2xl font-bold text-gray-800">Panel de Administración</h1>
                     </div>
 
                     <div class="relative">
-                        <!-- Línea divisora completa -->
-                        <div class="absolute bottom-0 left-0 right-0 border-t border-gray-300"></div>
-
-                        <nav class="flex">
+                        <nav class="flex px-6">
                             <button id="usersTab"
-                                class="tab-active py-4 px-6 text-center border-b-2 font-medium text-sm text-blue-600 border-blue-600 relative z-10">
+                                class="tab-active py-4 px-6 text-center border-b-2 font-medium text-sm text-blue-600 border-blue-600 relative z-10 transition-smooth">
                                 <i class="fas fa-users mr-2"></i>Usuarios
                             </button>
                             <button id="rolesTab"
-                                class="py-4 px-6 text-center border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent relative z-10">
+                                class="py-4 px-6 text-center border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent relative z-10 transition-smooth">
                                 <i class="fas fa-user-tag mr-2"></i>Roles
                             </button>
                             <button id="permissionsTab"
-                                class="py-4 px-6 text-center border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent relative z-10">
+                                class="py-4 px-6 text-center border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 border-transparent relative z-10 transition-smooth">
                                 <i class="fas fa-key mr-2"></i>Permisos
                             </button>
                         </nav>
@@ -96,747 +137,468 @@
                 <div class="p-6">
                     <!-- Users Tab Content -->
                     <div id="usersContent" class="tab-content active">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-lg font-medium text-gray-900">Gestión de Usuarios</h2>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                            <div>
+                                <h2 class="text-lg font-semibold text-gray-800">Gestión de Usuarios</h2>
+                                <p class="text-sm text-gray-500">Administra los usuarios del sistema</p>
+                            </div>
                             <button id="addUserButton"
-                                class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-smooth flex items-center shadow-md hover:shadow-lg">
                                 <i class="fas fa-plus mr-2"></i>Nuevo Usuario
                             </button>
                         </div>
 
                         <!-- Users Table -->
-                        <div class="overflow-x-auto">
+                        <div class="overflow-x-auto custom-scrollbar rounded-lg border border-gray-200">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             ID
                                         </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Nombre
                                         </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Email
                                         </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Documento
                                         </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Dirección
-                                        </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Teléfono
                                         </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Tipo de Usuario
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Tipo
                                         </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Acciones
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <!-- Ejemplo de fila 1 - Empleado -->
                                     @if ($registros->isEmpty())
                                         <tr>
-                                            <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">
                                                 No hay usuarios registrados.
                                             </td>
                                         </tr>
                                     @else
                                         @foreach ($registros as $reg)
-                                            <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="text-sm text-gray-900">{{ $reg->id }}</div>
+                                            <tr class="table-row-hover transition-smooth">
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ $reg->id }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                     <div class="flex items-center">
                                                         <div class="flex-shrink-0 h-10 w-10">
-                                                            <img class="h-10 w-10 rounded-full"
-                                                                src="https://randomuser.me/api/portraits/men/1.jpg"
-                                                                alt="">
+                                                            <img class="h-10 w-10 rounded-full object-cover"
+                                                                src="https://ui-avatars.com/api/?name={{ urlencode($reg->name) }}&background=random"
+                                                                alt="{{ $reg->name }}">
                                                         </div>
                                                         <div class="ml-4">
                                                             <div class="text-sm font-medium text-gray-900">
-                                                                {{ $reg->name }}</div>
+                                                                {{ $reg->name }}
+                                                            </div>
+                                                            <div class="text-xs text-gray-500 truncate max-w-xs">
+                                                                {{ $reg->direccion ?? 'Sin dirección' }}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="text-sm text-gray-900">{{ $reg->email }}</div>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                    {{ $reg->email }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {{ $reg->documento ?? 'N/A' }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {{ $reg->telefono ?? 'N/A' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-nowrap">
-                                                    @if ($reg->documento == null)
-                                                        <div class="text-sm text-gray-400">No registrado</div>
+                                                    @if($reg->TipoUsuario->name === 'Empleado')
+                                                        <span class="badge badge-employee">
+                                                            <i class="fas fa-user-tie mr-1"></i> {{ $reg->TipoUsuario->name }}
+                                                        </span>
                                                     @else
-                                                        <div class="text-sm text-gray-500">{{ $reg->documento }}</div>
+                                                        <span class="badge badge-client">
+                                                            <i class="fas fa-user mr-1"></i> {{ $reg->TipoUsuario->name }}
+                                                        </span>
                                                     @endif
                                                 </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    @if ($reg->direccion == null)
-                                                        <div class="text-sm text-gray-400">No registrado</div>
-                                                    @else
-                                                        <div class="text-sm text-gray-500">{{ $reg->direccion }}</div>
-                                                    @endif
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    @if ($reg->telefono == null)
-                                                        <div class="text-sm text-gray-400">No registrado</div>
-                                                    @else
-                                                        <div class="text-sm text-gray-500">{{ $reg->telefono }}</div>
-                                                    @endif
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <span
-                                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                        {{-- @dd($reg->TipoUsuario->name) --}}
-                                                        {{ $reg->TipoUsuario->name }}
-                                                    </span>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <button class="text-blue-600 hover:text-blue-900 mr-3 edit-user">
+                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                                    <button class="edit-btn action-btn edit-user" data-id="{{ $reg->id }}">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
-                                                    <button class="text-red-600 hover:text-red-900">
+                                                    <button class="delete-btn action-btn" data-id="{{ $reg->id }}">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     @endif
-
-                                    {{-- <!-- Ejemplo de fila 2 - Cliente con campos NULL -->
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">1</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full"
-                                                        src="https://randomuser.me/api/portraits/women/1.jpg"
-                                                        alt="">
-                                                </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">María González</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">maria@cliente.com</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-400">No registrado</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-400">No registrada</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-400">No registrado</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                Cliente
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button class="text-blue-600 hover:text-blue-900 mr-3 edit-user">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="text-red-600 hover:text-red-900">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-
-                                    <!-- Ejemplo de fila 3 - Empleado con algunos campos NULL -->
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">1</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex items-center">
-                                                <div class="flex-shrink-0 h-10 w-10">
-                                                    <img class="h-10 w-10 rounded-full"
-                                                        src="https://randomuser.me/api/portraits/men/2.jpg"
-                                                        alt="">
-                                                </div>
-                                                <div class="ml-4">
-                                                    <div class="text-sm font-medium text-gray-900">Carlos Rodríguez</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">carlos@empresa.com</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-500">87654321</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-400">No registrada</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-500">555-9876</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <span
-                                                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                                Empleado
-                                            </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button class="text-blue-600 hover:text-blue-900 mr-3 edit-user">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="text-red-600 hover:text-red-900">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr> --}}
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <!-- Paginación -->
+                        @if($registros->hasPages())
+                        <div class="mt-4 px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                            <div class="flex-1 flex justify-between sm:hidden">
+                                @if($registros->onFirstPage())
+                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-white cursor-not-allowed">
+                                        Anterior
+                                    </span>
+                                @else
+                                    <a href="{{ $registros->previousPageUrl() }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                        Anterior
+                                    </a>
+                                @endif
+                                
+                                @if($registros->hasMorePages())
+                                    <a href="{{ $registros->nextPageUrl() }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                        Siguiente
+                                    </a>
+                                @else
+                                    <span class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-300 bg-white cursor-not-allowed">
+                                        Siguiente
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-700">
+                                        Mostrando
+                                        <span class="font-medium">{{ $registros->firstItem() }}</span>
+                                        a
+                                        <span class="font-medium">{{ $registros->lastItem() }}</span>
+                                        de
+                                        <span class="font-medium">{{ $registros->total() }}</span>
+                                        resultados
+                                    </p>
+                                </div>
+                                <div>
+                                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                        @if($registros->onFirstPage())
+                                            <span class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-300 cursor-not-allowed">
+                                                <span class="sr-only">Anterior</span>
+                                                <i class="fas fa-chevron-left"></i>
+                                            </span>
+                                        @else
+                                            <a href="{{ $registros->previousPageUrl() }}" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                                <span class="sr-only">Anterior</span>
+                                                <i class="fas fa-chevron-left"></i>
+                                            </a>
+                                        @endif
+                                        
+                                        @foreach($registros->getUrlRange(1, $registros->lastPage()) as $page => $url)
+                                            @if($page == $registros->currentPage())
+                                                <span aria-current="page" class="z-10 bg-blue-50 border-blue-500 text-blue-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                    {{ $page }}
+                                                </span>
+                                            @else
+                                                <a href="{{ $url }}" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                    {{ $page }}
+                                                </a>
+                                            @endif
+                                        @endforeach
+                                        
+                                        @if($registros->hasMorePages())
+                                            <a href="{{ $registros->nextPageUrl() }}" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                                <span class="sr-only">Siguiente</span>
+                                                <i class="fas fa-chevron-right"></i>
+                                            </a>
+                                        @else
+                                            <span class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-300 cursor-not-allowed">
+                                                <span class="sr-only">Siguiente</span>
+                                                <i class="fas fa-chevron-right"></i>
+                                            </span>
+                                        @endif
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
                     <!-- Roles Tab Content -->
                     <div id="rolesContent" class="tab-content hidden">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-lg font-medium text-gray-900">Gestión de Roles</h2>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                            <div>
+                                <h2 class="text-lg font-semibold text-gray-800">Gestión de Roles</h2>
+                                <p class="text-sm text-gray-500">Administra los roles y sus permisos</p>
+                            </div>
                             <button
-                                class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-smooth flex items-center shadow-md hover:shadow-lg">
                                 <i class="fas fa-plus mr-2"></i>Nuevo Rol
                             </button>
                         </div>
 
                         <!-- Roles Table -->
-                        <div class="overflow-x-auto">
+                        <div class="overflow-x-auto custom-scrollbar rounded-lg border border-gray-200">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Nombre del Rol
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Rol
                                         </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Descripción
                                         </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Usuarios
                                         </th>
-                                        <th scope="col"
-                                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Acciones
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <tr>
+                                    <tr class="table-row-hover transition-smooth">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">Administrador</div>
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
+                                                    <i class="fas fa-crown text-indigo-600"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Administrador</div>
+                                                    <div class="text-xs text-gray-500">admin</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            Acceso completo al sistema
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Acceso completo al sistema</div>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                3
+                                            </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">3</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button class="text-blue-600 hover:text-blue-900 mr-3"><i
-                                                    class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i
-                                                    class="fas fa-trash"></i></button>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="edit-btn action-btn">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="delete-btn action-btn">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="table-row-hover transition-smooth">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">Editor</div>
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                                    <i class="fas fa-user-edit text-blue-600"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Editor</div>
+                                                    <div class="text-xs text-gray-500">editor</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            Puede crear y editar contenido
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Puede crear y editar contenido</div>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                5
+                                            </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">5</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button class="text-blue-600 hover:text-blue-900 mr-3"><i
-                                                    class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i
-                                                    class="fas fa-trash"></i></button>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="edit-btn action-btn">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="delete-btn action-btn">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="table-row-hover transition-smooth">
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm font-medium text-gray-900">Usuario</div>
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
+                                                    <i class="fas fa-user text-gray-600"></i>
+                                                </div>
+                                                <div class="ml-4">
+                                                    <div class="text-sm font-medium text-gray-900">Usuario</div>
+                                                    <div class="text-xs text-gray-500">user</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            Acceso básico a la plataforma
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">Acceso básico a la plataforma</div>
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                15
+                                            </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="text-sm text-gray-900">15</div>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <button class="text-blue-600 hover:text-blue-900 mr-3"><i
-                                                    class="fas fa-edit"></i></button>
-                                            <button class="text-red-600 hover:text-red-900"><i
-                                                    class="fas fa-trash"></i></button>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <button class="edit-btn action-btn">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="delete-btn action-btn">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-
-                    <!-- Permissions Tab Content -->
-                    <div id="permissionsContent" class="tab-content hidden">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-lg font-medium text-gray-900">Gestión de Permisos</h2>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="bg-white shadow overflow-hidden rounded-lg">
-                                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                                    <h3 class="text-lg font-medium text-gray-900">Administración</h3>
-                                </div>
-                                <div class="px-4 py-5 sm:p-6">
-                                    <div class="space-y-4">
-                                        <div class="flex items-center">
-                                            <input id="admin-users" name="admin-users" type="checkbox" checked
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                            <label for="admin-users" class="ml-3 block text-sm font-medium text-gray-700">
-                                                Gestionar usuarios
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="admin-roles" name="admin-roles" type="checkbox" checked
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                            <label for="admin-roles" class="ml-3 block text-sm font-medium text-gray-700">
-                                                Gestionar roles
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="admin-settings" name="admin-settings" type="checkbox" checked
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                            <label for="admin-settings"
-                                                class="ml-3 block text-sm font-medium text-gray-700">
-                                                Configuración del sistema
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white shadow overflow-hidden rounded-lg">
-                                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                                    <h3 class="text-lg font-medium text-gray-900">Contenido</h3>
-                                </div>
-                                <div class="px-4 py-5 sm:p-6">
-                                    <div class="space-y-4">
-                                        <div class="flex items-center">
-                                            <input id="content-create" name="content-create" type="checkbox" checked
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                            <label for="content-create"
-                                                class="ml-3 block text-sm font-medium text-gray-700">
-                                                Crear contenido
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="content-edit" name="content-edit" type="checkbox" checked
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                            <label for="content-edit"
-                                                class="ml-3 block text-sm font-medium text-gray-700">
-                                                Editar contenido
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="content-delete" name="content-delete" type="checkbox"
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                            <label for="content-delete"
-                                                class="ml-3 block text-sm font-medium text-gray-700">
-                                                Eliminar contenido
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white shadow overflow-hidden rounded-lg">
-                                <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
-                                    <h3 class="text-lg font-medium text-gray-900">Reportes</h3>
-                                </div>
-                                <div class="px-4 py-5 sm:p-6">
-                                    <div class="space-y-4">
-                                        <div class="flex items-center">
-                                            <input id="reports-view" name="reports-view" type="checkbox"
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                            <label for="reports-view"
-                                                class="ml-3 block text-sm font-medium text-gray-700">
-                                                Ver reportes
-                                            </label>
-                                        </div>
-                                        <div class="flex items-center">
-                                            <input id="reports-export" name="reports-export" type="checkbox"
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                            <label for="reports-export"
-                                                class="ml-3 block text-sm font-medium text-gray-700">
-                                                Exportar reportes
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-
-    <!-- Settings Modal -->
-    {{-- <div id="settingsModal" class="fixed inset-0 overflow-y-auto hidden z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <!-- Background overlay -->
-            <div id="modalBackdrop" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-
-            <!-- Modal content -->
-            <div class="modal-fade inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="flex justify-between items-start">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                            <i class="fas fa-cog mr-2 text-blue-600"></i>Configuración del Sistema
-                        </h3>
-                        <button id="closeModalConfig" type="button" class="text-gray-400 hover:text-gray-500 focus:outline-none">
-                            <span class="sr-only">Cerrar</span>
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    
-                    <!-- Tabs inside modal -->
-                    <div class="mt-6 border-b border-gray-200">
-                        <nav class="flex -mb-px">
-                            <button id="companyTab" class="tab-active py-4 px-6 text-center border-b-2 font-medium text-sm text-blue-600 border-blue-600">
-                                <i class="fas fa-building mr-2"></i>Datos de la Empresa
-                            </button>
-                        </nav>
-                    </div>
-                    
-                    <!-- Company Data Form -->
-                    <div id="companyContent" class="tab-content mt-6">
-                        <form class="space-y-6">
-                            <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                                <div class="sm:col-span-6">
-                                    <label for="company-logo" class="block text-sm font-medium text-gray-700">Logo de la Empresa</label>
-                                    <div class="mt-1 flex items-center">
-                                        <div class="file-upload">
-                                            <img id="logoPreview" src="https://via.placeholder.com/150" alt="Logo de la empresa" class="h-16 w-16 rounded-md object-cover">
-                                            <button type="button" class="ml-4 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                                Cambiar
-                                            </button>
-                                            <input type="file" id="company-logo" class="file-upload-input">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="sm:col-span-6">
-                                    <label for="company-name" class="block text-sm font-medium text-gray-700">Nombre de la Empresa</label>
-                                    <div class="mt-1">
-                                        <input type="text" name="company-name" id="company-name" value="Mi Empresa S.A." class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
-
-                                <div class="sm:col-span-4">
-                                    <label for="address" class="block text-sm font-medium text-gray-700">Dirección</label>
-                                    <div class="mt-1">
-                                        <input type="text" name="address" id="address" value="Av. Principal 123" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
-
-                                <div class="sm:col-span-2">
-                                    <label for="phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-                                    <div class="mt-1">
-                                        <input type="text" name="phone" id="phone" value="+1 555-1234" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
-
-                                <div class="sm:col-span-6">
-                                    <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
-                                    <div class="mt-1">
-                                        <input type="email" name="email" id="email" value="contacto@miempresa.com" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Guardar Cambios
-                    </button>
-                    <button id="cancelModal" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cancelar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
-    <!-- Add User Modal -->
-    <div id="addUserModal" class="fixed inset-0 overflow-y-auto hidden z-50" aria-labelledby="user-modal-title"
-        role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <!-- Background overlay -->
-            <div id="userModalBackdrop" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-                aria-hidden="true"></div>
-
-            <!-- Modal content -->
-            <div
-                class="modal-fade inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div class="flex justify-between items-start">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="user-modal-title">
-                            <i class="fas fa-user-plus mr-2 text-blue-600"></i>Agregar Nuevo Usuario
-                        </h3>
-                        <button id="closeUserModal" type="button"
-                            class="text-gray-400 hover:text-gray-500 focus:outline-none">
-                            <span class="sr-only">Cerrar</span>
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-
-                    <!-- User Form -->
-                    <div class="mt-6 space-y-4">
-                        <!-- Nombre -->
-                        <div>
-                            <label for="user-name" class="block text-sm font-medium text-gray-700">Nombre
-                                completo*</label>
-                            <div class="mt-1">
-                                <input type="text" name="user-name" id="user-name" required
-                                    class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                        </div>
-
-                        <!-- Email -->
-                        <div>
-                            <label for="user-email" class="block text-sm font-medium text-gray-700">Correo
-                                electrónico*</label>
-                            <div class="mt-1">
-                                <input type="email" name="user-email" id="user-email" required
-                                    class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                        </div>
-
-                        <!-- Contraseña -->
-                        <div>
-                            <label for="user-password" class="block text-sm font-medium text-gray-700">Contraseña*</label>
-                            <div class="mt-1">
-                                <input type="password" name="user-password" id="user-password" required
-                                    class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            </div>
-                        </div>
-
-                        <!-- Documento -->
-                        <div>
-                            <label for="user-document" class="block text-sm font-medium text-gray-700">Documento</label>
-                            <div class="mt-1">
-                                <input type="text" name="user-document" id="user-document"
-                                    class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="Opcional">
-                            </div>
-                        </div>
-
-                        <!-- Dirección -->
-                        <div>
-                            <label for="user-address" class="block text-sm font-medium text-gray-700">Dirección</label>
-                            <div class="mt-1">
-                                <textarea name="user-address" id="user-address" rows="2"
-                                    class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="Opcional"></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Teléfono -->
-                        <div>
-                            <label for="user-phone" class="block text-sm font-medium text-gray-700">Teléfono</label>
-                            <div class="mt-1">
-                                <input type="tel" name="user-phone" id="user-phone"
-                                    class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="Opcional">
-                            </div>
-                        </div>
-
-                        <!-- Tipo de Usuario -->
-                        <div>
-                            <label for="user-type" class="block text-sm font-medium text-gray-700">Tipo de
-                                Usuario*</label>
-                            <div class="mt-1">
-                                <select id="user-type" name="user-type" required
-                                    class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                                    <option value="">Seleccione un tipo</option>
-                                    <option value="1">Empleado</option>
-                                    <option value="2">Cliente</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Estado -->
-                        <div class="pt-2">
-                            <label class="block text-sm font-medium text-gray-700">Estado*</label>
-                            <div class="mt-2 space-y-2">
-                                <div class="flex items-center">
-                                    <input id="active" name="user-status" type="radio" value="1" checked
-                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                    <label for="active" class="ml-3 block text-sm font-medium text-gray-700">
-                                        Activo
-                                    </label>
-                                </div>
-                                <div class="flex items-center">
-                                    <input id="inactive" name="user-status" type="radio" value="0"
-                                        class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300">
-                                    <label for="inactive" class="ml-3 block text-sm font-medium text-gray-700">
-                                        Inactivo
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" id="saveUserBtn"
-                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">
-                        Guardar Usuario
-                    </button>
-                    <button id="cancelUserModal" type="button"
-                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                        Cancelar
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+    @include('configure.createUser')
 
     <script>
-        // // Configuración del modal de empresa
-        // // const settingsButton = document.getElementById('settingsButton');
-        // const settingsModal = document.getElementById('settingsModal');
-        // const modalBackdrop = document.getElementById('modalBackdrop');
-        // const closeModalConfig = document.getElementById('closeModalConfig');
-        // const cancelModal = document.getElementById('cancelModal');
-
-        // settingsButton.addEventListener('click', () => {
-        //     settingsModal.classList.remove('hidden');
-        // });
-
-        // function closeSettingsModal() {
-        //     settingsModal.classList.add('hidden');
-        // }
-
-        // closeModalConfig.addEventListener('click', closeSettingsModal);
-        // cancelModal.addEventListener('click', closeSettingsModal);
-        // modalBackdrop.addEventListener('click', closeSettingsModal);
-
-        // Configuración del modal de usuario
-        const addUserButton = document.getElementById('addUserButton');
-        const addUserModal = document.getElementById('addUserModal');
-        const userModalBackdrop = document.getElementById('userModalBackdrop');
-        const closeUserModal = document.getElementById('closeUserModal');
-        const cancelUserModal = document.getElementById('cancelUserModal');
-        const editUserButtons = document.querySelectorAll('.edit-user');
-
-        addUserButton.addEventListener('click', () => {
-            addUserModal.classList.remove('hidden');
-        });
-
-        editUserButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                addUserModal.classList.remove('hidden');
-                document.getElementById('user-modal-title').innerHTML =
-                    '<i class="fas fa-user-edit mr-2 text-blue-600"></i>Editar Usuario';
-                document.getElementById('user-name').value =
-                    'John Doe'; // Estos valores deberían venir de los datos del usuario
-                document.getElementById('user-email').value = 'john@example.com';
-                document.getElementById('user-role').value = 'Administrador';
-                document.getElementById('active').checked = true;
-            });
-        });
-
-        function closeUserModalFunc() {
-            addUserModal.classList.add('hidden');
-        }
-
-        closeUserModal.addEventListener('click', closeUserModalFunc);
-        cancelUserModal.addEventListener('click', closeUserModalFunc);
-        userModalBackdrop.addEventListener('click', closeUserModalFunc);
-
         // Gestión de pestañas principales
         const usersTab = document.getElementById('usersTab');
         const rolesTab = document.getElementById('rolesTab');
-        const permissionsTab = document.getElementById('permissionsTab');
-
+        // const permissionsTab = document.getElementById('permissionsTab');
+        
         const usersContent = document.getElementById('usersContent');
         const rolesContent = document.getElementById('rolesContent');
-        const permissionsContent = document.getElementById('permissionsContent');
+        // const permissionsContent = document.getElementById('permissionsContent');
 
         function resetTabs() {
             // Remove active classes from all tabs
-            [usersTab, rolesTab, permissionsTab].forEach(tab => {
+            [usersTab, rolesTab].forEach(tab => {
                 tab.classList.remove('tab-active', 'text-blue-600', 'border-blue-600');
                 tab.classList.add('text-gray-500', 'border-transparent');
             });
 
             // Hide all content
-            [usersContent, rolesContent, permissionsContent].forEach(content => {
+            [usersContent, rolesContent].forEach(content => {
                 content.classList.add('hidden');
                 content.classList.remove('active');
             });
         }
 
-        usersTab.addEventListener('click', () => {
+        function activateTab(tab, content) {
             resetTabs();
-            usersTab.classList.add('tab-active', 'text-blue-600', 'border-blue-600');
-            usersTab.classList.remove('text-gray-500');
-            usersContent.classList.remove('hidden');
-            usersContent.classList.add('active');
-        });
+            tab.classList.add('tab-active', 'text-blue-600', 'border-blue-600');
+            tab.classList.remove('text-gray-500');
+            content.classList.remove('hidden');
+            content.classList.add('active');
+            
+            // Guardar la pestaña activa en localStorage
+            localStorage.setItem('activeTab', tab.id);
+        }
 
-        rolesTab.addEventListener('click', () => {
-            resetTabs();
-            rolesTab.classList.add('tab-active', 'text-blue-600', 'border-blue-600');
-            rolesTab.classList.remove('text-gray-500');
-            rolesContent.classList.remove('hidden');
-            rolesContent.classList.add('active');
-        });
+        // Event listeners para pestañas
+        usersTab.addEventListener('click', () => activateTab(usersTab, usersContent));
+        rolesTab.addEventListener('click', () => activateTab(rolesTab, rolesContent));
+        permissionsTab.addEventListener('click', () => activateTab(permissionsTab, permissionsContent));
 
-        permissionsTab.addEventListener('click', () => {
-            resetTabs();
-            permissionsTab.classList.add('tab-active', 'text-blue-600', 'border-blue-600');
-            permissionsTab.classList.remove('text-gray-500');
-            permissionsContent.classList.remove('hidden');
-            permissionsContent.classList.add('active');
-        });
-
-        // Previsualización de logo
-        const logoInput = document.getElementById('company-logo');
-        const logoPreview = document.getElementById('logoPreview');
-
-        logoInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    logoPreview.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
+        // Cargar pestaña activa desde localStorage al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            const activeTabId = localStorage.getItem('activeTab') || 'usersTab';
+            const activeTab = document.getElementById(activeTabId);
+            const activeContent = document.getElementById(activeTabId.replace('Tab', 'Content'));
+            
+            if (activeTab && activeContent) {
+                activateTab(activeTab, activeContent);
             }
+        });
+
+        // Manejo del modal de usuario
+        const addUserButton = document.getElementById('addUserButton');
+        const addUserModal = document.getElementById('addUserModal');
+        const closeUserModal = document.getElementById('closeUserModal');
+        const cancelUserModal = document.getElementById('cancelUserModal');
+
+        function toggleUserModal(show) {
+            const modal = document.getElementById('addUserModal');
+            const content = document.getElementById('modalContent');
+            
+            if (show) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.add('opacity-100');
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            } else {
+                content.classList.remove('scale-100', 'opacity-100');
+                content.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('opacity-100');
+                }, 300);
+            }
+        }
+
+        // Event listeners para el modal
+        addUserButton.addEventListener('click', () => toggleUserModal(true));
+        closeUserModal.addEventListener('click', () => toggleUserModal(false));
+        cancelUserModal.addEventListener('click', () => toggleUserModal(false));
+
+        // Manejo de la creación de usuarios
+        function toggleAccessFields(value) {
+            const rolesSection = document.getElementById("roles-section");
+            const permissionsSection = document.getElementById("permissions-section");
+
+            if (value === "1") { // Empleado
+                rolesSection.classList.remove("hidden");
+                permissionsSection.classList.remove("hidden");
+                
+                // Animación para mostrar
+                setTimeout(() => {
+                    rolesSection.classList.remove("opacity-0");
+                    permissionsSection.classList.remove("opacity-0");
+                }, 10);
+            } else {
+                // Animación para ocultar
+                rolesSection.classList.add("opacity-0");
+                permissionsSection.classList.add("opacity-0");
+                setTimeout(() => {
+                    rolesSection.classList.add("hidden");
+                    permissionsSection.classList.add("hidden");
+                }, 300);
+            }
+        }
+
+        // Confirmación antes de eliminar
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const userId = this.getAttribute('data-id');
+                
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "¡No podrás revertir esto!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, eliminarlo',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Aquí iría la llamada AJAX para eliminar
+                        Swal.fire(
+                            'Eliminado!',
+                            'El usuario ha sido eliminado.',
+                            'success'
+                        ).then(() => {
+                            // Recargar la página o eliminar la fila de la tabla
+                            window.location.reload();
+                        });
+                    }
+                });
+            });
+        });
+
+        // Editar usuario (simulación)
+        document.querySelectorAll('.edit-user').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const userId = this.getAttribute('data-id');
+                // Aquí iría la lógica para cargar los datos del usuario en el modal
+                toggleUserModal(true);
+                console.log('Editando usuario ID:', userId);
+            });
         });
     </script>
 @endsection
