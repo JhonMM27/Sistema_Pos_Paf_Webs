@@ -60,11 +60,11 @@
 
     const menuItems = [
         { title: "Ventas", icon: "fa-cash-register", color: "bg-emerald-100", textColor: "text-emerald-700", roles: ['Administrador', 'manager', 'sales'], url: "#" },
-        { title: "Inventario", icon: "fa-boxes", color: "bg-cyan-100", textColor: "text-cyan-700", roles: ['Administrador', 'manager'], url: "{{route('categorias.store')}}" },
+        { title: "Inventario", icon: "fa-boxes", color: "bg-cyan-100", textColor: "text-cyan-700", roles: ['Administrador', 'manager'], url: "{{route('categorias.index')}}" },
         { title: "Clientes", icon: "fa-users", color: "bg-indigo-100", textColor: "text-indigo-700", roles: ['Administrador', 'manager', 'sales'], url: "#" },
         { title: "Proveedores", icon: "fa-truck", color: "bg-orange-100", textColor: "text-orange-700", roles: ['Administrador', 'manager'], url: "#" },
         { title: "Reportes", icon: "fa-chart-bar", color: "bg-blue-100", textColor: "text-blue-700", roles: ['Administrador', 'manager'], url: "#" },
-        { title: "Configuración", icon: "fa-cog", color: "bg-gray-100", textColor: "text-gray-700", roles: ['Administrador'], url: "#" }
+        { title: "Configuración", icon: "fa-cog", color: "bg-gray-100", textColor: "text-gray-700", roles: ['Administrador'], url: "{{route('configuracion.index')}}" }
     ];
 
     const usernameElements = document.querySelectorAll('#username');

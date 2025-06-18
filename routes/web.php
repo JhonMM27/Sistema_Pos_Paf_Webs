@@ -31,6 +31,7 @@ Route::prefix('inventario')->group(function () {
         // })->name('inventario.index');        
         Route::resource('categorias', CategoriaController::class);
         Route::resource('productos', ProductoController::class);
+        Route::get('productos-categorias', [ProductoController::class, 'categorias'])->name('productos.categorias');
         
     });
     

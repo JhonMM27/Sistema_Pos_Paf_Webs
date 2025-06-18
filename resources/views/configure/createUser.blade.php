@@ -1,7 +1,7 @@
 <!-- Add User Modal -->
 <div id="addUserModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden backdrop-blur-sm transition-opacity duration-300">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl mx-4 overflow-hidden border border-gray-200 transform transition-all duration-300 scale-95 opacity-0"
-         id="modalContent">
+        id="modalContent">
         <!-- Encabezado del Modal -->
         <div class="px-6 py-4 border-b flex justify-between items-center bg-gradient-to-r from-indigo-600 to-blue-600">
             <h3 class="text-xl font-semibold text-white flex items-center">
@@ -87,11 +87,11 @@
                 <div class="space-y-4">
                     <div>
                         <label for="TipoUsuario_id" class="block text-sm font-medium text-gray-700 mb-1">Tipo de Usuario*</label>
-                        <select name="user-type" id="TipoUsuario_id" required onchange="toggleAccessFields(this.value)"
+                        <select name="TipoUsuario_id" id="TipoUsuario_id" required onchange="toggleAccessFields(this.value)"
                             class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 transition-all appearance-none bg-white bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNoZXZyb24tZG93biI+PHBhdGggZD0ibTYgOSA2IDYgNi02Ii8+PC9zdmc+')] bg-no-repeat bg-[center_right_1rem]">
                             <option value="">Seleccione un tipo</option>
-                            <option value="2">Empleado</option>
-                            <option value="1">Cliente</option>
+                            <option value="1">Empleado</option>
+                            <option value="2">Cliente</option>
                         </select>
                     </div>
 

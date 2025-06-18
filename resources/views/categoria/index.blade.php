@@ -1,216 +1,319 @@
 @extends('layout.app')
 @section('contenido')
-    <main class="flex-1 p-6">
-        <div id="categoriesContent" class="tab-content">
-            <div class="bg-green-50 p-6 rounded-lg shadow mb-6">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Gestión de Categorías</h2>
-                    <div class="space-x-2">
-                        <button id="openAddCategoryModal"
-                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                            <i class="fas fa-plus-circle mr-1"></i> Nueva Categoría
-                        </button>
-                        <button id="exportCategoriesBtn"
-                            class="bg-amber-400 text-white px-4 py-2 rounded-md hover:bg-amber-500">
-                            <i class="fas fa-file-export mr-2"></i> Exportar
-                        </button>
-                    </div>
+<main class="flex-1 p-4 md:p-6">
+    <div id="categoriesContent" class="tab-content">
+        <!-- Encabezado y Controles -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-6 border border-gray-100">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                <div class="mb-4 md:mb-0">
+                    <h1 class="text-2xl font-bold text-gray-800">Gestión de Categorías</h1>
+                    <p class="text-gray-600 text-sm mt-1">Administra las categorías de productos del sistema</p>
                 </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button id="openAddCategoryModal"
+                        class="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm">
+                        <i class="fas fa-plus-circle mr-2"></i> Nueva Categoría
+                    </button>
+                    <button id="exportCategoriesBtn"
+                        class="flex items-center justify-center px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors shadow-sm">
+                        <i class="fas fa-file-export mr-2"></i> Exportar
+                    </button>
+                </div>
+            </div>
 
-                <!-- Filtros -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    {{-- <form action="{{ route('categorias.index') }}" method="GET">
+            <!-- Filtros Mejorados -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+                <form action="{{ route('categorias.index') }}" method="GET" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                        <!-- Campo de búsqueda -->
+                        <div class="md:col-span-2">
+                            <label for="categorySearch" class="block text-sm font-medium text-gray-700 mb-1">
+                                Buscar categoría
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                                <input type="text" id="categorySearch" placeholder="Nombre, ID o descripción" 
+                                    name="texto" value="{{ request('texto') }}"
+                                    class="pl-10 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Filtro por estado -->
                         <div>
-                            <label for="categorySearch" class="block text-sm font-medium text-gray-700 mb-1">Buscar
-                                categoría</label>
-                            <input type="text" id="categorySearch" placeholder="Nombre o ID de categoría" name="texto"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500">
+                            <label for="categoryStatus" class="block text-sm font-medium text-gray-700 mb-1">
+                                Estado
+                            </label>
+                            <select id="categoryStatus" name="estado"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm">
+                                <option value="">Todos</option>
+                                <option value="1" {{ request('estado') == '1' ? 'selected' : '' }}>Activo</option>
+                                <option value="0" {{ request('estado') == '0' ? 'selected' : '' }}>Inactivo</option>
+                            </select>
                         </div>
-                    </form> --}}
-                    <form action="{{ route('categorias.index') }}" method="GET" class="space-y-3">
-                        <div class="flex flex-col sm:flex-row gap-3 items-end">
-                            <!-- Campo de búsqueda - más compacto -->
-                            <div class="flex-1 w-full sm:w-auto">
-                                <label for="categorySearch" class="block text-sm font-medium text-gray-700 mb-1">Buscar
-                                    categoría</label>
-                                <input type="text" id="categorySearch" placeholder="Nombre o ID" name="texto"
-                                    value="{{ request('texto') }}"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 text-sm">
-                            </div>
 
-                            <!-- Filtro por estado - más compacto -->
-                            <div class="flex-1 w-full sm:w-auto">
-                                <label for="categoryStatus"
-                                    class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                                <select id="categoryStatus" name="estado"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500 text-sm">
-                                    <option value="">Todos</option>
-                                    <option value="1" {{ request('estado') == '1' ? 'selected' : '' }}>Activo</option>
-                                    <option value="0" {{ request('estado') == '0' ? 'selected' : '' }}>Inactivo
-                                    </option>
-                                </select>
-                            </div>
-
-                            <!-- Botones - más compactos -->
-                            <div class="flex gap-2 w-full sm:w-auto">
-                                <button type="submit"
-                                    class="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-                                    Filtrar
-                                </button>
-                                <a href="{{ route('categorias.index') }}"
-                                    class="px-3 py-1.5 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm">
-                                    Limpiar
-                                </a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Tabla de Categorías -->
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 text-sm">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-6 py-3 text-left font-semibold text-gray-600">ID</th>
-                                <th class="px-6 py-3 text-left font-semibold text-gray-600">Nombre</th>
-                                <th class="px-6 py-3 text-left font-semibold text-gray-600">Descripción</th>
-                                <th class="px-6 py-3 text-left font-semibold text-gray-600">Estado</th>
-                                <th class="px-6 py-3 text-left font-semibold text-gray-600">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @forelse ($registros as $reg)
-                                <tr>
-                                    <td class="px-6 py-4 text-gray-500">{{ $reg->id }}</td>
-                                    <td class="px-6 py-4 font-medium text-gray-900">{{ $reg->nombre }}</td>
-                                    <td class="px-6 py-4 text-gray-500">{{ $reg->descripcion }}</td>
-                                    <td class="px-6 py-4">
-                                        @if ($reg->estado == 1)
-                                            <span
-                                                class="px-2 inline-flex text-xs font-semibold rounded-full bg-green-100 text-green-800">
-                                                Activo
-                                            </span>
-                                        @else
-                                            <span
-                                                class="px-2 inline-flex text-xs font-semibold rounded-full bg-red-100 text-red-800">
-                                                Inactivo
-                                            </span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 flex space-x-2">
-                                        <button class="text-blue-600 hover:text-blue-900 edit-category"
-                                            id="editCategoryBtn-{{ $reg->id }}">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button class="text-red-600 hover:text-red-900 delete-category"
-                                            data-id="{{ $reg->id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                @include('categoria.edit')
-                                @include('categoria.delete')
-                            @empty
-                                <tr>
-                                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">No hay categorías
-                                        registradas.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Paginación -->
-                <div class="flex flex-col md:flex-row items-center justify-between mt-6 space-y-2 md:space-y-0">
-                    <div class="flex justify-center w-full">
-                        <div class="text-lg">
-                            {{ $registros->links() }}
+                        <!-- Botones de acción -->
+                        <div class="flex gap-2">
+                            <button type="submit"
+                                class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors shadow-sm">
+                                <i class="fas fa-filter mr-2"></i> Filtrar
+                            </button>
+                            <a href="{{ route('categorias.index') }}"
+                                class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors shadow-sm text-center">
+                                <i class="fas fa-sync-alt mr-2"></i> Limpiar
+                            </a>
                         </div>
                     </div>
-                </div>
-
+                </form>
             </div>
-        </div>
-    </main>
 
-    <!-- Modales -->
-    @include('categoria.create')
+            <!-- Tabla de Categorías Mejorada -->
+            <div class="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                ID
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Nombre
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Descripción
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Estado
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Acciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @forelse ($registros as $reg)
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                #{{ $reg->id }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {{ $reg->nombre }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate" title="{{ $reg->descripcion }}">
+                                {{ $reg->descripcion }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if ($reg->estado == 1)
+                                <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                    <i class="fas fa-check-circle mr-1"></i> Activo
+                                </span>
+                                @else
+                                <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                    <i class="fas fa-times-circle mr-1"></i> Inactivo
+                                </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                <div class="flex justify-end space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-900 edit-category p-1 rounded-full hover:bg-blue-50 transition-colors"
+                                        id="editCategoryBtn-{{ $reg->id }}" title="Editar">
+                                        <i class="fas fa-edit w-5 h-5"></i>
+                                    </button>
+                                    <button class="text-red-600 hover:text-red-900 delete-category p-1 rounded-full hover:bg-red-50 transition-colors"
+                                        data-id="{{ $reg->id }}" title="Eliminar">
+                                        <i class="fas fa-trash w-5 h-5"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        @include('categoria.edit')
+                        @include('categoria.delete')
+                        @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                                <div class="flex flex-col items-center justify-center py-8">
+                                    <i class="fas fa-folder-open text-4xl text-gray-300 mb-2"></i>
+                                    <p class="text-gray-500">No hay categorías registradas</p>
+                                    <button id="openAddCategoryModal" class="mt-4 text-sm text-blue-600 hover:text-blue-800">
+                                        <i class="fas fa-plus-circle mr-1"></i> Crear primera categoría
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-    <!-- Notificaciones -->
-    @if (Session::has('mensaje'))
-        <div id="successModal"
-            class="fixed top-4 right-4 z-50 bg-green-500 text-white py-4 px-6 rounded-lg shadow-lg opacity-0 transition-opacity duration-1000">
-            <div class="flex items-center">
-                <i class="fas fa-check-circle mr-3 text-3xl"></i>
-                <div class="flex flex-col">
-                    <span class="font-semibold text-lg">{{ Session::get('mensaje') }}</span>
-                    <span class="text-sm">Operación realizada con éxito.</span>
+            <!-- Paginación Mejorada -->
+            @if($registros->hasPages())
+            <div class="flex flex-col md:flex-row items-center justify-between mt-6 pt-4 border-t border-gray-200">
+                <div class="text-sm text-gray-500 mb-4 md:mb-0">
+                    {{-- Mostrando {{ $registros->firstItem() }} a {{ $registros->lastItem() }} de {{ $registros->total() }} resultados --}}
+                </div>
+                <div class="flex items-center space-x-1">
+                    {{ $registros->links('vendor.pagination.tailwind') }}
                 </div>
             </div>
+            @endif
         </div>
-    @endif
+    </div>
+</main>
 
-    @if (Session::has('error'))
-        <div id="errorModal"
-            class="fixed top-4 right-4 z-50 bg-red-500 text-white py-4 px-6 rounded-lg shadow-lg opacity-0 transition-opacity duration-1000">
-            <div class="flex items-center">
-                <i class="fas fa-exclamation-triangle mr-3 text-3xl"></i>
-                <div class="flex flex-col">
-                    <span class="font-semibold text-lg">{{ Session::get('error') }}</span>
-                    <span class="text-sm">Algo salió mal, intenta nuevamente.</span>
-                </div>
-            </div>
-        </div>
-    @endif
+<!-- Modales -->
+@include('categoria.create')
 
-    <!-- Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('openAddCategoryModal')?.addEventListener('click', function() {
-                document.getElementById('addCategoryModal').classList.remove('hidden');
-            });
+<!-- Notificaciones -->
+@if(session('mensaje'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        html: '<div class="text-center"><i class="fas fa-check-circle text-4xl text-green-500 mb-3"></i><p class="text-gray-700">{{ session('mensaje') }}</p></div>',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#16a34a',
+        background: '#fff',
+        color: '#1f2937',
+        customClass: {
+            popup: 'rounded-xl shadow-xl border border-gray-200',
+            confirmButton: 'px-6 py-2 font-medium'
+        }
+    });
+</script>
+@endif
 
-            document.querySelectorAll('.close-modal').forEach(button => {
-                button.addEventListener('click', function() {
-                    this.closest('.fixed').classList.add('hidden');
+@if(session('error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        html: '<div class="text-center"><i class="fas fa-exclamation-circle text-4xl text-red-500 mb-3"></i><p class="text-gray-700">{{ session('error') }}</p></div>',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#dc2626',
+        background: '#fff',
+        color: '#1f2937',
+        customClass: {
+            popup: 'rounded-xl shadow-xl border border-gray-200',
+            confirmButton: 'px-6 py-2 font-medium'
+        }
+    });
+</script>
+@endif
+
+@if($errors->any())
+<script>
+    let errores = '';
+    @foreach($errors->all() as $error)
+        errores += '<li class="text-left py-1 flex items-start"><i class="fas fa-exclamation-circle text-red-500 mr-2 mt-0.5"></i>{{ $error }}</li>';
+    @endforeach
+
+    Swal.fire({
+        icon: 'error',
+        title: 'Errores de validación',
+        html: `<ul class="text-left list-disc pl-5">${errores}</ul>`,
+        confirmButtonText: 'Corregir',
+        confirmButtonColor: '#dc2626',
+        background: '#fff',
+        color: '#1f2937',
+        customClass: {
+            popup: 'rounded-xl shadow-xl border border-gray-200',
+            confirmButton: 'px-6 py-2 font-medium'
+        }
+    });
+</script>
+@endif
+
+<!-- Scripts -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Manejo de modales
+        const modalActions = {
+            init() {
+                // Abrir modal de creación
+                document.getElementById('openAddCategoryModal')?.addEventListener('click', function() {
+                    document.getElementById('addCategoryModal').classList.remove('hidden');
+                    document.body.classList.add('overflow-hidden');
                 });
-            });
 
-            document.querySelectorAll('.edit-category').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.id.split('-')[1];
-                    document.getElementById('editCategoryModal-' + id).classList.remove('hidden');
+                // Cerrar modales
+                document.querySelectorAll('.close-modal').forEach(button => {
+                    button.addEventListener('click', function() {
+                        this.closest('.fixed').classList.add('hidden');
+                        document.body.classList.remove('overflow-hidden');
+                    });
                 });
-            });
 
-            document.querySelectorAll('.delete-category').forEach(button => {
-                button.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    document.getElementById('deleteCategoryModal-' + id).classList.remove('hidden');
+                // Abrir modales de edición
+                document.querySelectorAll('.edit-category').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.id.split('-')[1];
+                        document.getElementById('editCategoryModal-' + id).classList.remove('hidden');
+                        document.body.classList.add('overflow-hidden');
+                    });
                 });
-            });
 
-            // Mostrar notificaciones
-            const successModal = document.getElementById("successModal");
-            const errorModal = document.getElementById("errorModal");
-
-            if (successModal) {
-                successModal.classList.remove("opacity-0");
-                successModal.classList.add("opacity-100");
-                setTimeout(() => {
-                    successModal.classList.remove("opacity-100");
-                    successModal.classList.add("opacity-0");
-                }, 5000);
+                // Abrir modales de eliminación
+                document.querySelectorAll('.delete-category').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        document.getElementById('deleteCategoryModal-' + id).classList.remove('hidden');
+                        document.body.classList.add('overflow-hidden');
+                    });
+                });
             }
+        };
 
-            if (errorModal) {
-                errorModal.classList.remove("opacity-0");
-                errorModal.classList.add("opacity-100");
-                setTimeout(() => {
-                    errorModal.classList.remove("opacity-100");
-                    errorModal.classList.add("opacity-0");
-                }, 5000);
-            }
+        modalActions.init();
+
+        // Exportar categorías
+        document.getElementById('exportCategoriesBtn')?.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Exportar categorías',
+                html: `
+                    <div class="text-left space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Formato</label>
+                            <select id="exportFormat" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option value="excel">Excel (.xlsx)</option>
+                                <option value="csv">CSV (.csv)</option>
+                                <option value="pdf">PDF (.pdf)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="exportOnlyActive" class="rounded text-blue-600">
+                                <span class="ml-2 text-sm text-gray-700">Solo categorías activas</span>
+                            </label>
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Exportar',
+                cancelButtonText: 'Cancelar',
+                focusConfirm: false,
+                preConfirm: () => {
+                    const format = document.getElementById('exportFormat').value;
+                    const onlyActive = document.getElementById('exportOnlyActive').checked;
+                    
+                    // Aquí iría la lógica para exportar
+                    // Por ahora simulamos una exportación exitosa
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve({ format, onlyActive });
+                        }, 1000);
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Exportación completada',
+                        text: `Las categorías se han exportado en formato ${result.value.format.toUpperCase()}`,
+                        confirmButtonColor: '#16a34a',
+                    });
+                }
+            });
         });
-    </script>
+    });
+</script>
 @endsection

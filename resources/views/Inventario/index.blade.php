@@ -33,7 +33,7 @@
 
     </main>
     
-    @include('inventario.producto.modal')
+    {{-- @include('producto.index') --}}
 
 
     <!-- Modales -->

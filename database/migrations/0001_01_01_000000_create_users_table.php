@@ -23,7 +23,7 @@ return new class extends Migration
             
             $table->timestamp('email_verified_at')->nullable();
 
-            $table->unsignedBigInteger('TipoUsuario_id')->default(2);
+            $table->unsignedBigInteger('TipoUsuario_id')->default(1);
 
         
             

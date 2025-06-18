@@ -43,15 +43,21 @@ class CategoriaController extends Controller
      */
     public function store(CategoriaRequest $request)
     {
+        try {
+            $registro = new Categoria();
+            $registro->nombre = $request->input('nombre');
+            $registro->descripcion = $request->input('descripcion');
+            $registro->estado = $request->input('estado');
+            $registro->save();
 
-        $registro = new Categoria();
-        $registro->nombre = $request->input('nombre');
-        $registro->descripcion = $request->input('descripcion');
-        $registro->estado = $request->input('estado');
-        $registro->save();
-
-        return redirect()->route('categorias.index')->with('mensaje', 'Nuevo Registro [ ' . $registro->nombre . ' ] se agregó con exito');
+            return redirect()->route('categorias.index')
+                ->with('mensaje', 'Categoría agregada con éxito');
+        } catch (\Exception $e) {
+            return redirect()->route('categorias.index')
+                ->with('error', 'Ocurrió un error al guardar la categoría: ' . $e->getMessage());
+        }
     }
+
 
     /**
      * Display the specified resource.
@@ -68,13 +74,21 @@ class CategoriaController extends Controller
      */
     public function update(CategoriaRequest $request, $id)
     {
-        $registro = Categoria::findOrFail($id);
-        $registro->nombre = $request->input('nombre');
-        $registro->descripcion = $request->input('descripcion');
-        $registro->estado = $request->input('estado');
-        $registro->save();
-        return redirect()->route('categorias.index')->with('mensaje', 'El Registro [ ' . $registro->nombre . ' ] Se Actualizo con Exito');
+        try {
+            $registro = Categoria::findOrFail($id);
+            $registro->nombre = $request->input('nombre');
+            $registro->descripcion = $request->input('descripcion');
+            $registro->estado = $request->input('estado');
+            $registro->save();
+
+            return redirect()->route('categorias.index')
+                ->with('mensaje', 'Categoría actualizada con éxito');
+        } catch (\Exception $e) {
+            return redirect()->route('categorias.index')
+                ->with('error', 'Ocurrió un error al actualizar la categoría: ' . $e->getMessage());
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -84,9 +98,9 @@ class CategoriaController extends Controller
         try {
             $registro = Categoria::findOrFail($id);
             $registro->delete();
-            return redirect()->route('categorias.index')->with('mensaje', 'Registro ' . $registro->nombre . ' eliminado con exito');
+            return redirect()->route('categorias.index')->with('mensaje', 'Categoría Eliminada con éxito');
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->route('categorias.index')->with('error', 'Error al eliminar el registro porque esta siendo usado');
+            return redirect()->route('categorias.index')->with('error', 'Hubo un error al Eliminar la categoría');
         }
     }
 }

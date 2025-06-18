@@ -44,7 +44,7 @@
             { title: "Clientes", icon: "fa-users", color: "bg-purple-100", textColor: "text-purple-700", description: "Administra tu base de clientes", roles: ['Administrador', 'manager', 'sales'], url: "#" },
             { title: "Proveedores", icon: "fa-truck", color: "bg-orange-100", textColor: "text-orange-700", description: "Gestiona tus proveedores", roles: ['Administrador', 'manager'], url: "#" },
             { title: "Reportes", icon: "fa-chart-bar", color: "bg-indigo-100", textColor: "text-indigo-700", description: "Análisis y estadísticas", roles: ['Administrador', 'manager'], url: "#" },
-            { title: "Configuración", icon: "fa-cog", color: "bg-gray-100", textColor: "text-gray-700", description: "Ajustes del sistema", roles: ['Administrador'], url: "#" }
+            { title: "Configuración", icon: "fa-cog", color: "bg-gray-100", textColor: "text-gray-700", description: "Ajustes del sistema", roles: ['Administrador'], url: "{{route('configuracion.index')}}" }
         ];
 
         // Inicializar las tarjetas del dashboard

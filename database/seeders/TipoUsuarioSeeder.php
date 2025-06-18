@@ -14,8 +14,8 @@ class TipoUsuarioSeeder extends Seeder
     public function run(): void
     {
         $tipo_usuarios = [
-            ['name' => 'Cliente'],
-            ['name' => 'Empleado']
+            ['name' => 'Empleado'],
+            ['name' => 'Cliente']
         ];
 
         // Insertar categorías en la base de datos

@@ -22,18 +22,27 @@ class CategoriaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nombre' => 'required|min:3|max:50',
+            'nombre' => 'required|string|max:50',
             'descripcion' => 'required|string',
-            'estado' => 'required|boolean', // Asegúrate de que 'estado' sea un valor booleano (0 o 1)
+            'estado' => 'required|boolean',
         ];
     }
 
     public function messages(): array
     {
         return [
+            // Nombre
             'nombre.required' => 'El campo nombre es obligatorio',
-            'nombre.min' => 'El campo nombre debe tener al menos 3 caracteres',
-            'nombre.max' => 'El campo nombre debe tener como maximo 50 caracteres',
+            'nombre.string' => 'El campo nombre debe ser texto',
+            'nombre.max' => 'El campo nombre no debe exceder los 50 caracteres',
+
+            // Descripción
+            'descripcion.required' => 'El campo descripción es obligatorio',
+            'descripcion.string' => 'El campo descripción debe ser texto',
+
+            // Estado
+            'estado.required' => 'Debe seleccionar un estado',
+            'estado.boolean' => 'El valor del estado debe ser válido (Activo o Inactivo)',
         ];
     }
 }

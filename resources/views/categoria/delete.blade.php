@@ -1,58 +1,69 @@
-<!-- Modal para Eliminar Categoría -->
+<!-- Modal para Eliminar Categoría - Versión Mejorada con Formulario -->
 <div id="deleteCategoryModal-{{ $reg->id }}"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full border-t-4 border-red-600">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-bold text-red-600">
-                <i class="fas fa-exclamation-triangle mr-2"></i>Eliminar Categoría
-            </h3>
-            <button class="text-gray-500 hover:text-gray-700 close-modal">
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden">
+    <div
+        class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden border-l-4 border-red-500 transform transition-all duration-300">
+
+        <!-- Encabezado -->
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-red-100 p-3 rounded-full">
+                    <i class="fas fa-exclamation-triangle text-red-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-800">Eliminar Categoría</h3>
+                    <p class="text-sm text-gray-500">ID: #{{ $reg->id }}</p>
+                </div>
+            </div>
+            <button
+                class="text-gray-400 hover:text-gray-600 transition-colors close-modal p-1 rounded-full hover:bg-gray-100">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
-        <form id="deleteCategoryForm-{{ $reg->id }}" action="{{ route('categorias.destroy', $reg->id) }}" method="POST">
+        <!-- Formulario de Eliminación -->
+        <form id="deleteCategoryForm-{{ $reg->id }}" action="{{ route('categorias.destroy', $reg->id) }}"
+            method="POST">
             @csrf
-            @method('DELETE') <!-- Esto estaba mal como @method('destroy') -->
-            <div class="mb-4">
-                <p class="text-gray-800 font-semibold">¿Está seguro de que desea eliminar esta categoría?</p>
-                <p class="text-gray-500 text-sm">Esta acción no se puede deshacer.</p>
+            @method('DELETE')
 
-                <input type="text" id="categoryName" name="nombre" value="{{ $reg->nombre }}" readonly
-                    class="mt-3 w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700 cursor-not-allowed">
+            <div class="px-6 py-4">
+                <div class="space-y-4">
+                    <div class="bg-red-50/50 border border-red-100 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-info-circle text-red-500 mt-0.5 mr-2"></i>
+                            <div>
+                                <p class="font-medium text-red-800">¿Está seguro de eliminar esta categoría?</p>
+                                <p class="text-sm text-red-600 mt-1">Esta acción es permanente y no puede deshacerse.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Categoría a eliminar</label>
+                        <div class="relative">
+                            <input type="text" name="nombre" value="{{ $reg->nombre }}" readonly
+                                class="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-gray-700 cursor-not-allowed">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="flex justify-end space-x-3 mt-4">
+            <!-- Pie del Modal - Botones -->
+            <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
                 <button type="button"
-                    class="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 close-modal">Cancelar</button>
+                    class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors close-modal">
+                    <i class="fas fa-times mr-2"></i> Cancelar
+                </button>
                 <button type="submit"
-                    class="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700">Eliminar</button>
+                    class="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center">
+                    <i class="fas fa-trash-alt mr-2"></i> Eliminar Permanentemente
+                </button>
             </div>
         </form>
     </div>
 </div>
-
-
-    <script>
-        // document.getElementById("deleteCategoryBtn-{{ $reg->id }}").addEventListener('click', function() {
-        //     document.getElementById("deleteCategoryModal-{{ $reg->id }}").classList.remove('hidden');
-        // });
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-        // Mostrar modal
-        document.querySelectorAll('.delete-category').forEach(button => {
-            button.addEventListener('click', function () {
-                const id = this.dataset.id;
-                document.getElementById('deleteCategoryModal-' + id).classList.remove('hidden');
-            });
-        });
-
-        // Cerrar modal
-        document.querySelectorAll('.close-modal').forEach(btn => {
-            btn.addEventListener('click', function () {
-                this.closest('.fixed').classList.add('hidden');
-            });
-        });
-    });
-    </script>

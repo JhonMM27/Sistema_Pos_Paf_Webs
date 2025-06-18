@@ -1,76 +1,73 @@
 <!-- Modal para Editar Categoría -->
 <div id="editCategoryModal-{{ $reg->id }}"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
-    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full border-t-4 border-blue-600 animate-fadeIn">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-bold text-blue-600">
-                <i class="fas fa-pen mr-2"></i>Editar Categoría
-            </h3>
-            <button class="text-gray-500 hover:text-gray-700 close-modal">
+    class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm transition-opacity duration-300">
+    <div
+        class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden border-l-4 border-blue-500 transform transition-all duration-300 scale-95 hover:scale-100">
+
+        <!-- Encabezado -->
+        <div class="bg-white px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-100 p-2 rounded-lg">
+                    <i class="fas fa-edit text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800">
+                    Editar Categoría <span class="text-blue-600">#{{ $reg->id }}</span>
+                </h3>
+            </div>
+            <button class="close-modal text-gray-400 hover:text-gray-600 transition-colors">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
-        <form id="editCategoryForm-{{ $reg->id }}"
-            action="{{ route('categorias.update', ['categoria' => $reg->id]) }}" method="POST">
+        <!-- Formulario -->
+        <form method="POST" action="{{ route('categorias.update', $reg->id) }}">
             @csrf
             @method('PUT')
+            <div class="px-6 py-4 space-y-5">
+                <!-- Campo Nombre -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center">
+                        Nombre <span class="text-red-500 ml-1">*</span>
+                    </label>
+                    <input type="text" name="nombre" value="{{ $reg->nombre }}"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
+                        placeholder="Ingrese el nombre de la categoría">
+                </div>
 
-            <!-- Campo: Nombre -->
-            <div class="mb-4">
-                <label for="categoryName-{{ $reg->id }}"
-                    class="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-                <input type="text" id="categoryName-{{ $reg->id }}" name="nombre" value="{{ $reg->nombre }}"
-                    required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <!-- Campo Descripción -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Descripción
+                    </label>
+                    <textarea name="descripcion" rows="3"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder-gray-400"
+                        placeholder="Agregue una descripción opcional">{{ $reg->descripcion }}</textarea>
+                </div>
+
+                <!-- Campo Estado -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Estado
+                    </label>
+                    <select name="estado"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white pr-8">
+                        <option value="1" {{ $reg->estado == 'activo' ? 'selected' : '' }}>Activo</option>
+                        <option value="0" {{ $reg->estado == 'inactivo' ? 'selected' : '' }}>Inactivo</option>
+                    </select>
+                </div>
             </div>
 
-            <!-- Campo: Descripción -->
-            <div class="mb-4">
-                <label for="categoryDescription-{{ $reg->id }}"
-                    class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
-                <textarea id="categoryDescription-{{ $reg->id }}" rows="3" name="descripcion"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('descripcion', $reg->descripcion) }}</textarea>
-            </div>
-
-            <!-- Campo: Estado -->
-            <div class="mb-4">
-                <label for="estado-{{ $reg->id }}"
-                    class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                <select id="estado-{{ $reg->id }}" name="estado"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="1" {{ $reg->estado == 1 ? 'selected' : '' }}>Activo</option>
-                    <option value="0" {{ $reg->estado == 0 ? 'selected' : '' }}>Inactivo</option>
-                </select>
-            </div>
-
-            <!-- Botones -->
-            <div class="flex justify-end space-x-3">
+            <!-- Pie del Modal -->
+            <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
                 <button type="button"
-                    class="px-4 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-100 close-modal">Cancelar</button>
+                    class="close-modal px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors">
+                    <i class="fas fa-times mr-2"></i> Cancelar
+                </button>
                 <button type="submit"
-                    class="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700">Guardar</button>
+                    class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-save mr-2"></i> Guardar Cambios
+                </button>
             </div>
         </form>
     </div>
 </div>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mostrar modal de edición
-        document.querySelectorAll('.edit-category').forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.id.split('-')[1];
-                document.getElementById('editCategoryModal-' + id).classList.remove('hidden');
-            });
-        });
-
-        // Cerrar cualquier modal
-        document.querySelectorAll('.close-modal').forEach(button => {
-            button.addEventListener('click', function() {
-                this.closest('.fixed').classList.add('hidden');
-            });
-        });
-    });
-</script>
