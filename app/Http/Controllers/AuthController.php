@@ -17,17 +17,20 @@ class AuthController extends Controller
 
     // Procesar el intento de login
     public function login(AuthLoginRequest $request){
-        $credenciales = $request->only('email', 'password');
-        if (Auth::attempt($credenciales)) {
+        try {
+            // Usar el método authenticate que ya maneja "remember"
+            $request->authenticate();
+            
             // Regenerar la sesión para evitar ataques de fijación de sesión
             $request->session()->regenerate();
+            
             // Redirigir al usuario a la ruta deseada (dashboard en este ejemplo)
             return redirect()->intended(route('dashboard'));
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->errors())->onlyInput('email');
         }
-        return back()->withErrors([
-            'email' => 'Las credenciales proporcionadas son incorrectas.',
-        ])->onlyInput('email');
     }
+    
     // Cerrar sesión
     public function logout(Request $request)
     {

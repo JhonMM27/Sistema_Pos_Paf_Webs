@@ -15,10 +15,16 @@
                         <i class="fas fa-warehouse"></i> Administra los productos del inventario
                     </p>
                 </div>
-                <button id="addProductBtn"
-                    class="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm">
-                    <i class="fas fa-plus-circle mr-2"></i> Agregar Producto
-                </button>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button id="addProductBtn"
+                        class="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm">
+                        <i class="fas fa-plus-circle mr-2"></i> Agregar Producto
+                    </button>
+                    <a href="{{ route('categorias.index') }}"
+                        class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+                        <i class="fas fa-tags mr-2"></i> Ir a Categorías
+                    </a>
+                </div>
             </div>
 
             <!-- FILTROS -->
@@ -71,9 +77,10 @@
                             <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Nombre</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Código de Barras</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Categoría</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Precio</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Precio Compra</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Precio Venta</th>
                             <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Stock</th>
-                            <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Unidad</th>
+                            {{-- <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Unidad</th> --}}
                             <th class="px-6 py-3 text-left text-xs font-semibold text-green-600 uppercase tracking-wider">Estado</th>
                             <th class="px-6 py-3 text-center text-xs font-semibold text-green-600 uppercase tracking-wider">Acciones</th>
                         </tr>
@@ -85,9 +92,10 @@
                             <td class="px-6 py-4 text-sm font-bold text-green-900">{{ $reg->nombre }}</td>
                             <td class="px-6 py-4 text-sm text-green-700">{{ $reg->codigo_barras }}</td>
                             <td class="px-6 py-4 text-sm text-green-700">{{ $reg->categoria->nombre ?? '-' }}</td>
+                            <td class="px-6 py-4 text-sm text-green-700">S/ {{ number_format($reg->precio_compra, 2) }}</td>
                             <td class="px-6 py-4 text-sm text-green-700">S/ {{ number_format($reg->precio, 2) }}</td>
                             <td class="px-6 py-4 text-sm text-green-700">{{ $reg->stock }}</td>
-                            <td class="px-6 py-4 text-sm text-green-700">{{ $reg->unidad }}</td>
+                            {{-- <td class="px-6 py-4 text-sm text-green-700">{{ $reg->unidad }}</td> --}}
                             <td class="px-6 py-4 text-sm">
                                 @if ($reg->estado == 1)
                                 <span class="px-2.5 py-0.5 inline-flex text-xs font-semibold rounded-full bg-green-100 text-green-800 shadow-sm">
@@ -150,7 +158,65 @@
 @include('producto.edit')
 @include('producto.delete')
 
-@endsection
+<!-- Notificaciones -->
+@if(session('mensaje'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        html: '<div class="text-center"><i class="fas fa-check-circle text-4xl text-green-500 mb-3"></i><p class="text-gray-700">{{ session('mensaje') }}</p></div>',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#16a34a',
+        background: '#fff',
+        color: '#1f2937',
+        customClass: {
+            popup: 'rounded-xl shadow-xl border border-gray-200',
+            confirmButton: 'px-6 py-2 font-medium'
+        }
+    });
+</script>
+@endif
+
+@if(session('error'))
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        html: '<div class="text-center"><i class="fas fa-exclamation-circle text-4xl text-red-500 mb-3"></i><p class="text-gray-700">{{ session('error') }}</p></div>',
+        confirmButtonText: 'Entendido',
+        confirmButtonColor: '#dc2626',
+        background: '#fff',
+        color: '#1f2937',
+        customClass: {
+            popup: 'rounded-xl shadow-xl border border-gray-200',
+            confirmButton: 'px-6 py-2 font-medium'
+        }
+    });
+</script>
+@endif
+
+@if($errors->any())
+<script>
+    let errores = '';
+    @foreach($errors->all() as $error)
+        errores += '<li class="text-left py-1 flex items-start"><i class="fas fa-exclamation-circle text-red-500 mr-2 mt-0.5"></i>{{ $error }}</li>';
+    @endforeach
+
+    Swal.fire({
+        icon: 'error',
+        title: 'Errores de validación',
+        html: `<ul class="text-left list-disc pl-5">${errores}</ul>`,
+        confirmButtonText: 'Corregir',
+        confirmButtonColor: '#dc2626',
+        background: '#fff',
+        color: '#1f2937',
+        customClass: {
+            popup: 'rounded-xl shadow-xl border border-gray-200',
+            confirmButton: 'px-6 py-2 font-medium'
+        }
+    });
+</script>
+@endif
 
 @push('scripts')
 <script>
@@ -176,10 +242,12 @@
 
     function showModal(id) {
         document.getElementById(id).classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
     }
 
     function hideModal(id) {
         document.getElementById(id).classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
     }
 
     function clearForm(form) {
@@ -205,135 +273,56 @@
             });
         });
 
-        // Crear producto (AJAX)
-        const formCreate = document.getElementById('formCreateProduct');
-        if (formCreate) {
-            formCreate.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const form = this;
-                form.querySelectorAll('span.text-red-500').forEach(e => e.textContent = '');
-                const data = new FormData(form);
-                fetch("{{ route('productos.store') }}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': getCSRFToken()
-                    },
-                    body: data
-                })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.success) {
-                        hideModal('modalCreateProduct');
-                        Swal.fire('¡Éxito!', res.mensaje, 'success').then(() => location.reload());
-                    } else {
-                        if (res.errors) {
-                            Object.keys(res.errors).forEach(key => {
-                                form.querySelector('.error-' + key).textContent = res.errors[key][0];
-                            });
-                        } else {
-                            Swal.fire('Error', res.mensaje || 'Ocurrió un error', 'error');
-                        }
-                    }
-                })
-                .catch(() => Swal.fire('Error', 'Ocurrió un error inesperado', 'error'));
-            });
-        }
-
         // Editar producto (abrir modal y cargar datos)
-        document.querySelectorAll('.edit-product').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const id = btn.id.replace('editProductBtn-', '');
-                const res = await fetch(`/inventario/productos/${id}/edit`);
-                const data = await res.json();
+        document.querySelectorAll('.edit-product').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const id = e.currentTarget.id.split('-')[1];
                 const form = document.getElementById('formEditProduct');
-                form.querySelector('#edit_id').value = data.id;
-                form.querySelector('#edit_nombre').value = data.nombre;
-                form.querySelector('#edit_codigo_barras').value = data.codigo_barras;
-                form.querySelector('#edit_descripcion').value = data.descripcion || '';
-                form.querySelector('#edit_unidad').value = data.unidad;
-                form.querySelector('#edit_precio').value = data.precio;
-                form.querySelector('#edit_stock').value = data.stock;
-                form.querySelector('#edit_estado').value = data.estado;
-                await fillSelectCategorias('edit_categoria_id', data.categoria_id);
-                form.querySelectorAll('span.text-red-500').forEach(e => e.textContent = '');
-                showModal('modalEditProduct');
+                form.action = `{{ url('inventario/productos') }}/${id}`;
+
+                try {
+                    const res = await fetch(`{{ url('inventario/productos') }}/${id}/edit`);
+                    if (!res.ok) throw new Error('Producto no encontrado');
+                    const data = await res.json();
+                    
+                    document.getElementById('edit_id').value = data.id;
+                    document.getElementById('edit_nombre').value = data.nombre;
+                    document.getElementById('edit_codigo_barras').value = data.codigo_barras;
+                    document.getElementById('edit_descripcion').value = data.descripcion || '';
+                    document.getElementById('edit_precio').value = data.precio;
+                    document.getElementById('edit_precio_compra').value = data.precio_compra;
+                    document.getElementById('edit_stock').value = data.stock;
+                    document.getElementById('edit_estado').value = data.estado ? '1' : '0';
+                    
+                    await fillSelectCategorias('edit_categoria_id', data.categoria_id);
+                    
+                    showModal('modalEditProduct');
+                } catch (err) {
+                    console.error('Error al cargar datos del producto', err);
+                    Swal.fire('Error', 'No se pudieron cargar los datos del producto.', 'error');
+                }
             });
         });
 
-        // Editar producto (AJAX)
-        const formEdit = document.getElementById('formEditProduct');
-        if (formEdit) {
-            formEdit.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const form = this;
-                form.querySelectorAll('span.text-red-500').forEach(e => e.textContent = '');
-                const id = form.querySelector('#edit_id').value;
-                const data = new FormData(form);
-                data.append('_method', 'PUT');
-                fetch(`/inventario/productos/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': getCSRFToken()
-                    },
-                    body: data
-                })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.success) {
-                        hideModal('modalEditProduct');
-                        Swal.fire('¡Actualizado!', res.mensaje, 'success').then(() => location.reload());
-                    } else {
-                        if (res.errors) {
-                            Object.keys(res.errors).forEach(key => {
-                                form.querySelector('.error-' + key).textContent = res.errors[key][0];
-                            });
-                        } else {
-                            Swal.fire('Error', res.mensaje || 'Ocurrió un error', 'error');
-                        }
-                    }
-                })
-                .catch(() => Swal.fire('Error', 'Ocurrió un error inesperado', 'error'));
-            });
-        }
-
-        // Eliminar producto (abrir modal)
-        document.querySelectorAll('.delete-product').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const id = btn.dataset.id;
+        // Eliminar producto
+        document.querySelectorAll('.delete-product').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                const form = document.getElementById('formDeleteProduct');
+                form.action = `{{ url('inventario/productos') }}/${id}`;
+                
+                // Cargar datos en el modal de confirmación (opcional pero útil)
+                const productName = e.currentTarget.closest('tr').querySelector('td:nth-child(2)').textContent;
                 document.getElementById('delete_id').value = id;
+                document.getElementById('delete_nombre').value = productName;
                 showModal('modalDeleteProduct');
             });
         });
-
-        // Eliminar producto (AJAX)
-        const formDelete = document.getElementById('formDeleteProduct');
-        if (formDelete) {
-            formDelete.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const id = document.getElementById('delete_id').value;
-                fetch(`/inventario/productos/${id}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': getCSRFToken(),
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: '_method=DELETE'
-                })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.success) {
-                        hideModal('modalDeleteProduct');
-                        Swal.fire('¡Eliminado!', res.mensaje, 'success').then(() => location.reload());
-                    } else {
-                        Swal.fire('Error', res.mensaje || 'Ocurrió un error', 'error');
-                    }
-                })
-                .catch(() => Swal.fire('Error', 'Ocurrió un error inesperado', 'error'));
-            });
-        }
 
         // Filtros
         fillSelectCategorias('categoria_id');
     });
 </script>
 @endpush
+
+@endsection

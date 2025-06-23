@@ -16,10 +16,11 @@ return new class extends Migration
             $table->dateTime('fecha');
             $table->enum('metodo_pago', ['efectivo', 'tarjeta', 'yape', 'plin']);
             $table->decimal('total', 10, 2);
-            $table->enum('estado', ['emitida', 'anulada'])->default('emitida');
+            $table->enum('estado', ['pendiente', 'completada', 'anulada'])->default('pendiente');
             
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('cliente_id')->nullable()->references('id')->on('users')->onDelete('cascade');
+            $table->foreignId('cliente_id')->nullable()->references('id')->on('users')->onDelete('set null');
+            
 
             $table->timestamps();
         });

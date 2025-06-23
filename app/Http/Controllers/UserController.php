@@ -18,28 +18,32 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        // Obtener el ID del tipo de usuario "Empleado"
+        $tipoEmpleadoId = TipoUsuario::where('name', 'Empleado')->value('id');
 
         $texto = $request->get('texto');
-        // $user = User::with(['roles', 'permissions'])->findOrFail($id);
-        $usuarios = User::all();
         
-        // Obtener roles con conteo de usuarios y permisos
+        // Query base para usuarios, filtrando solo por empleados
+        $query = User::where('TipoUsuario_id', $tipoEmpleadoId);
+
+        if ($texto) {
+            $query->where('name', 'LIKE', '%' . $texto . '%');
+        }
+
+        $registros = $query->paginate(10);
+        $usuarios = $query->get(); // Para consistencia si alguna parte lo usa
+
+        // Obtener roles y permisos para los modales
         $roles = Role::withCount(['users', 'permissions'])->get();
-        
-        // Calcular usuarios por rol manualmente para mayor precisión
         foreach ($roles as $role) {
-            $role->users_count = $role->users()->count();
+            $role->users_count = $role->users()->where('TipoUsuario_id', $tipoEmpleadoId)->count();
             $role->permissions_count = $role->permissions()->count();
         }
         
         $permisos = Permission::all();
-        $tipo_usuario = TipoUsuario::select('id','name')->get();
+        $tipo_usuario = TipoUsuario::where('name', 'Empleado')->get(); // Solo tipo empleado para el formulario
 
-        $registros = User::where('name', 'LIKE', '%' . $texto . '%')->paginate(10);
-        return view('configure.index', compact(['roles', 'permisos', 'texto', 'registros', 'usuarios','tipo_usuario']));
-
-        // return view('configure.index');
-
+        return view('configure.index', compact(['roles', 'permisos', 'texto', 'registros', 'usuarios', 'tipo_usuario']));
     }
 
     /**
@@ -69,12 +73,12 @@ class UserController extends Controller
             'documento' => $request->documento,
             'direccion' => $request->direccion,
             'telefono' => $request->telefono,
-            'TipoUsuario_id' => $request->TipoUsuario_id ?: 2, // Default to 2 if not provided
+            'TipoUsuario_id' => 1, // Siempre asignar tipo "Empleado"
         ]);
         $user->syncRoles($request->roles);
         $user->syncPermissions($request->permissions);
 
-        return redirect()->route('configuracion.index')->with('success', 'Usuario creado correctamente');
+        return redirect()->route('configuracion.index')->with('success', 'Empleado creado correctamente');
     }
 
     /**

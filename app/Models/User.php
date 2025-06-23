@@ -46,6 +46,17 @@ class User extends Authenticatable
         return $this->belongsTo(TipoUsuario::class, 'TipoUsuario_id');
     }
 
+    // Relaciones para ventas
+    public function ventasComoVendedor()
+    {
+        return $this->hasMany(Venta::class, 'user_id');
+    }
+
+    public function ventasComoCliente()
+    {
+        return $this->hasMany(Venta::class, 'cliente_id');
+    }
+
     public function ventas()
     {
         return $this->hasMany(Venta::class);
@@ -54,5 +65,21 @@ class User extends Authenticatable
     public function compras()
     {
         return $this->hasMany(Compra::class);
+    }
+
+    // Métodos útiles
+    public function esEmpleado()
+    {
+        return $this->TipoUsuario && $this->TipoUsuario->name === 'Empleado';
+    }
+
+    public function esCliente()
+    {
+        return $this->TipoUsuario && $this->TipoUsuario->name === 'Cliente';
+    }
+
+    public function getTipoUsuarioNombreAttribute()
+    {
+        return $this->TipoUsuario ? $this->TipoUsuario->name : 'Sin tipo';
     }
 }

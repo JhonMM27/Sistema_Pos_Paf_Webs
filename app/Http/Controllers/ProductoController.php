@@ -32,6 +32,10 @@ class ProductoController extends Controller
 
         $registros = $query->orderBy('id', 'desc')->paginate(10)->appends($request->query());
         $categorias = Categoria::where('estado', 1)->orderBy('nombre')->get(['id', 'nombre']);
+        
+        // Opciones para el campo unidad
+        // $unidades = ['Kg', 'G', 'Ml', 'L'];
+        
         return view('producto.index', compact(['registros', 'texto', 'categoria_id', 'estado', 'categorias']));
     }
 
@@ -47,17 +51,11 @@ class ProductoController extends Controller
     {
         try {
             $producto = Producto::create($request->validated());
-            return response()->json([
-                'success' => true,
-                'mensaje' => 'Producto creado correctamente',
-                'producto' => $producto->load('categoria')
-            ]);
+            return redirect()->route('productos.index')
+                ->with('mensaje', 'Producto creado correctamente');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'mensaje' => 'Error al crear el producto',
-                'error' => $e->getMessage()
-            ], 500);
+            return redirect()->route('productos.index')
+                ->with('error', 'Error al crear el producto: ' . $e->getMessage());
         }
     }
 
@@ -83,17 +81,11 @@ class ProductoController extends Controller
         try {
             $producto = Producto::findOrFail($id);
             $producto->update($request->validated());
-            return response()->json([
-                'success' => true,
-                'mensaje' => 'Producto actualizado correctamente',
-                'producto' => $producto->load('categoria')
-            ]);
+            return redirect()->route('productos.index')
+                ->with('mensaje', 'Producto actualizado correctamente');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'mensaje' => 'Error al actualizar el producto',
-                'error' => $e->getMessage()
-            ], 500);
+            return redirect()->route('productos.index')
+                ->with('error', 'Error al actualizar el producto: ' . $e->getMessage());
         }
     }
 
@@ -105,16 +97,14 @@ class ProductoController extends Controller
         try {
             $producto = Producto::findOrFail($id);
             $producto->delete();
-            return response()->json([
-                'success' => true,
-                'mensaje' => 'Producto eliminado correctamente'
-            ]);
+            return redirect()->route('productos.index')
+                ->with('mensaje', 'Producto eliminado correctamente');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('productos.index')
+                ->with('error', 'No se puede eliminar el producto porque tiene registros asociados');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'mensaje' => 'Error al eliminar el producto',
-                'error' => $e->getMessage()
-            ], 500);
+            return redirect()->route('productos.index')
+                ->with('error', 'Error al eliminar el producto: ' . $e->getMessage());
         }
     }
 
@@ -122,5 +112,11 @@ class ProductoController extends Controller
     {
         $categorias = Categoria::where('estado', 1)->orderBy('nombre')->get(['id', 'nombre']);
         return response()->json($categorias);
+    }
+
+    public function unidades()
+    {
+        $unidades = ['Kg', 'G', 'Ml', 'L'];
+        return response()->json($unidades);
     }
 }

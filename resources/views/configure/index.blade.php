@@ -140,12 +140,12 @@
                     <div id="usersContent" class="tab-content active">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                             <div>
-                                <h2 class="text-lg font-semibold text-gray-800">Gestión de Usuarios</h2>
-                                <p class="text-sm text-gray-500">Administra los usuarios del sistema</p>
+                                <h2 class="text-lg font-semibold text-gray-800">Gestión de Empleados</h2>
+                                <p class="text-sm text-gray-500">Administra los empleados del sistema</p>
                             </div>
                             <button id="addUserButton"
                                 class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-smooth flex items-center shadow-md hover:shadow-lg">
-                                <i class="fas fa-plus mr-2"></i>Nuevo Usuario
+                                <i class="fas fa-plus mr-2"></i>Nuevo Empleado
                             </button>
                         </div>
 
@@ -188,7 +188,7 @@
                                     @if ($registros->isEmpty())
                                         <tr>
                                             <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-                                                No hay usuarios registrados.
+                                                No hay empleados registrados.
                                             </td>
                                         </tr>
                                     @else

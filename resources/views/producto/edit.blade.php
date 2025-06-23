@@ -6,56 +6,74 @@
         <h2 class="text-xl font-bold text-green-800 mb-4 flex items-center gap-2">
             <i class="fas fa-edit text-green-500"></i> Editar Producto
         </h2>
-        <form id="formEditProduct" autocomplete="off">
+        <form id="formEditProduct" method="POST" action="" autocomplete="off">
+            @csrf
+            @method('PUT')
             <input type="hidden" name="id" id="edit_id">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="block text-green-700 text-sm font-semibold mb-1">Nombre</label>
-                    <input type="text" name="nombre" id="edit_nombre" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm" required>
-                    <span class="text-xs text-red-500 error-nombre"></span>
+                    <input type="text" name="nombre" id="edit_nombre" value="{{ old('nombre') }}" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm @error('nombre') border-red-500 @enderror" required>
+                    @error('nombre')
+                        <span class="text-xs text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-green-700 text-sm font-semibold mb-1">Código de Barras</label>
-                    <input type="text" name="codigo_barras" id="edit_codigo_barras" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm" required>
-                    <span class="text-xs text-red-500 error-codigo_barras"></span>
+                    <input type="text" name="codigo_barras" id="edit_codigo_barras" value="{{ old('codigo_barras') }}" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm @error('codigo_barras') border-red-500 @enderror" required>
+                    @error('codigo_barras')
+                        <span class="text-xs text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="md:col-span-2">
                     <label class="block text-green-700 text-sm font-semibold mb-1">Descripción</label>
-                    <textarea name="descripcion" id="edit_descripcion" rows="2" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm"></textarea>
-                    <span class="text-xs text-red-500 error-descripcion"></span>
+                    <textarea name="descripcion" id="edit_descripcion" rows="2" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm @error('descripcion') border-red-500 @enderror">{{ old('descripcion') }}</textarea>
+                    @error('descripcion')
+                        <span class="text-xs text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div>
-                    <label class="block text-green-700 text-sm font-semibold mb-1">Unidad</label>
-                    <input type="text" name="unidad" id="edit_unidad" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm" required>
-                    <span class="text-xs text-red-500 error-unidad"></span>
+                    <label class="block text-green-700 text-sm font-semibold mb-1">Precio Venta</label>
+                    <input type="number" step="0.01" name="precio" id="edit_precio" value="{{ old('precio') }}" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm @error('precio') border-red-500 @enderror" required>
+                    @error('precio')
+                        <span class="text-xs text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div>
-                    <label class="block text-green-700 text-sm font-semibold mb-1">Precio</label>
-                    <input type="number" step="0.01" name="precio" id="edit_precio" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm" required>
-                    <span class="text-xs text-red-500 error-precio"></span>
+                    <label class="block text-green-700 text-sm font-semibold mb-1">Precio Compra</label>
+                    <input type="number" step="0.01" name="precio_compra" id="edit_precio_compra" value="{{ old('precio_compra') }}" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm @error('precio_compra') border-red-500 @enderror" required>
+                    @error('precio_compra')
+                        <span class="text-xs text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-green-700 text-sm font-semibold mb-1">Stock</label>
-                    <input type="number" name="stock" id="edit_stock" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm" required>
-                    <span class="text-xs text-red-500 error-stock"></span>
+                    <input type="number" name="stock" id="edit_stock" value="{{ old('stock') }}" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm @error('stock') border-red-500 @enderror" required>
+                    @error('stock')
+                        <span class="text-xs text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-green-700 text-sm font-semibold mb-1">Estado</label>
-                    <select name="estado" id="edit_estado" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm" required>
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
+                    <select name="estado" id="edit_estado" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm @error('estado') border-red-500 @enderror" required>
+                        <option value="1" {{ old('estado', '1') == '1' ? 'selected' : '' }}>Activo</option>
+                        <option value="0" {{ old('estado') == '0' ? 'selected' : '' }}>Inactivo</option>
                     </select>
-                    <span class="text-xs text-red-500 error-estado"></span>
+                    @error('estado')
+                        <span class="text-xs text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-green-700 text-sm font-semibold mb-1">Categoría</label>
-                    <select name="categoria_id" id="edit_categoria_id" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm" required>
+                    <select name="categoria_id" id="edit_categoria_id" class="w-full rounded-md border border-green-300 px-3 py-2 focus:ring-2 focus:ring-green-400 text-sm @error('categoria_id') border-red-500 @enderror" required>
                         <option value="">Seleccione</option>
-                        {{-- @foreach ($categorias as $cat) --}}
-                        {{-- <option value="{{ $cat->id }}">{{ $cat->nombre }}</option> --}}
-                        {{-- @endforeach --}}
+                        @foreach ($categorias as $cat)
+                            <option value="{{ $cat->id }}" {{ old('categoria_id') == $cat->id ? 'selected' : '' }}>{{ $cat->nombre }}</option>
+                        @endforeach
                     </select>
-                    <span class="text-xs text-red-500 error-categoria_id"></span>
+                    @error('categoria_id')
+                        <span class="text-xs text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
             <div class="mt-6 flex justify-end gap-2">

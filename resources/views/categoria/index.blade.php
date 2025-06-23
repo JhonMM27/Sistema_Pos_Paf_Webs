@@ -14,10 +14,10 @@
                         class="flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-sm">
                         <i class="fas fa-plus-circle mr-2"></i> Nueva Categoría
                     </button>
-                    <button id="exportCategoriesBtn"
-                        class="flex items-center justify-center px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors shadow-sm">
-                        <i class="fas fa-file-export mr-2"></i> Exportar
-                    </button>
+                    <a href="{{ route('productos.index') }}"
+                        class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+                        <i class="fas fa-boxes-stacked mr-2"></i> Ir a Productos
+                    </a>
                 </div>
             </div>
 
@@ -264,56 +264,6 @@
         };
 
         modalActions.init();
-
-        // Exportar categorías
-        document.getElementById('exportCategoriesBtn')?.addEventListener('click', function() {
-            Swal.fire({
-                title: 'Exportar categorías',
-                html: `
-                    <div class="text-left space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Formato</label>
-                            <select id="exportFormat" class="w-full px-3 py-2 border border-gray-300 rounded-md">
-                                <option value="excel">Excel (.xlsx)</option>
-                                <option value="csv">CSV (.csv)</option>
-                                <option value="pdf">PDF (.pdf)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="flex items-center">
-                                <input type="checkbox" id="exportOnlyActive" class="rounded text-blue-600">
-                                <span class="ml-2 text-sm text-gray-700">Solo categorías activas</span>
-                            </label>
-                        </div>
-                    </div>
-                `,
-                showCancelButton: true,
-                confirmButtonText: 'Exportar',
-                cancelButtonText: 'Cancelar',
-                focusConfirm: false,
-                preConfirm: () => {
-                    const format = document.getElementById('exportFormat').value;
-                    const onlyActive = document.getElementById('exportOnlyActive').checked;
-                    
-                    // Aquí iría la lógica para exportar
-                    // Por ahora simulamos una exportación exitosa
-                    return new Promise(resolve => {
-                        setTimeout(() => {
-                            resolve({ format, onlyActive });
-                        }, 1000);
-                    });
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Exportación completada',
-                        text: `Las categorías se han exportado en formato ${result.value.format.toUpperCase()}`,
-                        confirmButtonColor: '#16a34a',
-                    });
-                }
-            });
-        });
     });
 </script>
 @endsection

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('codigo_barras')->unique()->nullable();
             $table->text('descripcion')->nullable();
-            $table->string('unidad')->nullable();
+            // $table->string('unidad')->nullable();
             $table->decimal('precio', 10, 2);
             $table->integer('stock')->default(0);
             // $table->integer('stock_minimo')->default(0);
