@@ -36,16 +36,26 @@ class ReporteController extends Controller
         }
 
         // Obtener ventas del período
-        $ventas = Venta::with(['vendedor', 'cliente', 'detalles.producto'])
+        $ventas = Venta::with(['vendedor', 'cliente', 'detalles.producto', 'devoluciones.detalles.producto'])
             ->whereBetween('fecha', [$fechaInicio, $fechaFin])
             ->where('estado', Venta::ESTADO_COMPLETADA)
             ->orderBy('fecha', 'desc')
             ->get();
 
+        // Obtener devoluciones del período
+        $devoluciones = \App\Models\Devolucion::with(['venta', 'usuario', 'detalles.producto'])
+            ->whereBetween('fecha', [$fechaInicio, $fechaFin])
+            ->orderBy('fecha', 'desc')
+            ->get();
+
         // Estadísticas generales
         $totalVentas = $ventas->sum('total');
+        $totalDevoluciones = $devoluciones->sum('total_devuelto');
+        $ventasNetas = $totalVentas - $totalDevoluciones;
         $totalTransacciones = $ventas->count();
+        $totalDevolucionesCount = $devoluciones->count();
         $promedioVenta = $totalTransacciones > 0 ? $totalVentas / $totalTransacciones : 0;
+        $promedioVentaNeta = $totalTransacciones > 0 ? $ventasNetas / $totalTransacciones : 0;
 
         // Definir todos los métodos de pago posibles
         $todosLosMetodos = collect(['efectivo', 'tarjeta', 'transferencia', 'yape', 'plin']);
@@ -71,14 +81,23 @@ class ReporteController extends Controller
         // Productos más vendidos
         $productosMasVendidos = $this->obtenerProductosMasVendidos($fechaInicio, $fechaFin);
 
+        // Productos más devueltos
+        $productosMasDevueltos = $this->obtenerProductosMasDevueltos($fechaInicio, $fechaFin);
+
         return view('reporte.ventas', compact(
             'ventas',
+            'devoluciones',
             'totalVentas',
+            'totalDevoluciones',
+            'ventasNetas',
             'totalTransacciones',
+            'totalDevolucionesCount',
             'promedioVenta',
+            'promedioVentaNeta',
             'ventasPorMetodo',
             'ventasAgrupadas',
             'productosMasVendidos',
+            'productosMasDevueltos',
             'fechaInicio',
             'fechaFin',
             'tipoReporte'
@@ -203,11 +222,24 @@ class ReporteController extends Controller
             ->where('estado', Venta::ESTADO_COMPLETADA)
             ->get();
 
+        $devoluciones = \App\Models\Devolucion::with(['venta', 'usuario'])
+            ->whereBetween('fecha', [$fechaInicio, $fechaFin])
+            ->get();
+
+        $totalVentas = $ventas->sum('total');
+        $totalDevoluciones = $devoluciones->sum('total_devuelto');
+        $ventasNetas = $totalVentas - $totalDevoluciones;
+
         $data = [
             'ventas' => $ventas,
-            'totalVentas' => $ventas->sum('total'),
+            'devoluciones' => $devoluciones,
+            'totalVentas' => $totalVentas,
+            'totalDevoluciones' => $totalDevoluciones,
+            'ventasNetas' => $ventasNetas,
             'totalTransacciones' => $ventas->count(),
-            'promedioVenta' => $ventas->count() > 0 ? $ventas->sum('total') / $ventas->count() : 0,
+            'totalDevolucionesCount' => $devoluciones->count(),
+            'promedioVenta' => $ventas->count() > 0 ? $totalVentas / $ventas->count() : 0,
+            'promedioVentaNeta' => $ventas->count() > 0 ? $ventasNetas / $ventas->count() : 0,
             'fechaInicio' => $fechaInicio,
             'fechaFin' => $fechaFin,
         ];
@@ -356,6 +388,22 @@ class ReporteController extends Controller
             ->select('producto_id', DB::raw('SUM(cantidad) as total_comprado'))
             ->groupBy('producto_id')
             ->orderBy('total_comprado', 'desc')
+            ->limit(10)
+            ->get();
+    }
+
+    private function obtenerProductosMasDevueltos($fechaInicio, $fechaFin)
+    {
+        return \App\Models\DetalleDevolucion::with('producto')
+            ->join('devoluciones', 'detalle_devoluciones.devolucion_id', '=', 'devoluciones.id')
+            ->whereBetween('devoluciones.fecha', [$fechaInicio, $fechaFin])
+            ->select(
+                'producto_id', 
+                DB::raw('SUM(cantidad) as total_devuelto'),
+                DB::raw('SUM(subtotal) as total_devuelto_monto')
+            )
+            ->groupBy('producto_id')
+            ->orderBy('total_devuelto', 'desc')
             ->limit(10)
             ->get();
     }

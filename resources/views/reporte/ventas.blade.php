@@ -83,11 +83,32 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         @foreach([
             ['title' => 'Total Ventas', 'value' => 'S/ '.number_format($totalVentas, 2), 'icon' => 'fas fa-wallet', 'color' => 'bg-blue-100 text-blue-600'],
-            ['title' => 'Transacciones', 'value' => number_format($totalTransacciones), 'icon' => 'fas fa-receipt', 'color' => 'bg-green-100 text-green-600'],
-            ['title' => 'Promedio por Venta', 'value' => 'S/ '.number_format($promedioVenta, 2), 'icon' => 'fas fa-chart-line', 'color' => 'bg-purple-100 text-purple-600'],
-            ['title' => 'Agrupación', 'value' => ucfirst($tipoReporte), 'icon' => 'fas fa-calendar', 'color' => 'bg-amber-100 text-amber-600']
+            ['title' => 'Ventas Netas', 'value' => 'S/ '.number_format($ventasNetas, 2), 'icon' => 'fas fa-chart-line', 'color' => 'bg-green-100 text-green-600'],
+            ['title' => 'Devoluciones', 'value' => 'S/ '.number_format($totalDevoluciones, 2), 'icon' => 'fas fa-undo', 'color' => 'bg-red-100 text-red-600'],
+            ['title' => 'Transacciones', 'value' => number_format($totalTransacciones), 'icon' => 'fas fa-receipt', 'color' => 'bg-purple-100 text-purple-600']
         ] as $index => $stat)
         <div class="bg-white rounded-xl shadow-sm p-6 animate-fade-in-up" style="animation-delay: {{ $index * 100 }}ms">
+            <div class="flex items-center">
+                <div class="{{ $stat['color'] }} p-3 rounded-lg mr-4">
+                    <i class="{{ $stat['icon'] }}"></i>
+                </div>
+                <div>
+                    <h4 class="text-sm font-medium text-gray-500">{{ $stat['title'] }}</h4>
+                    <p class="text-2xl font-bold text-gray-800">{{ $stat['value'] }}</p>
+                </div>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    <!-- Estadísticas adicionales -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        @foreach([
+            ['title' => 'Promedio por Venta', 'value' => 'S/ '.number_format($promedioVenta, 2), 'icon' => 'fas fa-calculator', 'color' => 'bg-indigo-100 text-indigo-600'],
+            ['title' => 'Promedio Venta Neta', 'value' => 'S/ '.number_format($promedioVentaNeta, 2), 'icon' => 'fas fa-chart-bar', 'color' => 'bg-teal-100 text-teal-600'],
+            ['title' => 'Total Devoluciones', 'value' => number_format($totalDevolucionesCount), 'icon' => 'fas fa-exchange-alt', 'color' => 'bg-orange-100 text-orange-600']
+        ] as $index => $stat)
+        <div class="bg-white rounded-xl shadow-sm p-6 animate-fade-in-up" style="animation-delay: {{ ($index + 4) * 100 }}ms">
             <div class="flex items-center">
                 <div class="{{ $stat['color'] }} p-3 rounded-lg mr-4">
                     <i class="{{ $stat['icon'] }}"></i>
@@ -118,33 +139,41 @@
             </div>
         </div>
 
-        <!-- Productos más vendidos -->
+        <!-- Gráfico de Ventas por Día -->
         <div class="bg-white rounded-xl shadow-sm p-6 animate-fade-in-right">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Productos Más Vendidos</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                        <tr>
-                            <th scope="col" class="py-3 px-4 text-left">Producto</th>
-                            <th scope="col" class="py-3 px-4 text-right">Cantidad</th>
-                            <th scope="col" class="py-3 px-4 text-right">Ingresos</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        @forelse($productosMasVendidos as $producto)
-                        <tr class="hover:bg-gray-50 transition-colors duration-200">
-                            <td class="py-3 px-4 font-medium text-gray-900">{{ $producto->producto->nombre ?? 'N/A' }}</td>
-                            <td class="py-3 px-4 text-right">{{ number_format($producto->total_vendido) }}</td>
-                            <td class="py-3 px-4 text-right font-medium">S/ {{ number_format($producto->total_ingresos, 2) }}</td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="3" class="py-4 px-6 text-center text-gray-500">No hay productos para mostrar</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Ventas por Día</h3>
+            <div class="h-72">
+                <canvas id="ventasPorDiaChart"></canvas>
             </div>
+        </div>
+    </div>
+
+    <!-- Productos más vendidos -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-8 animate-fade-in-up">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Productos Más Vendidos</h3>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="py-3 px-4 text-left">Producto</th>
+                        <th scope="col" class="py-3 px-4 text-right">Cantidad</th>
+                        <th scope="col" class="py-3 px-4 text-right">Ingresos</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @forelse($productosMasVendidos->take(5) as $producto)
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="py-3 px-4 font-medium text-gray-900">{{ $producto->producto->nombre ?? 'N/A' }}</td>
+                        <td class="py-3 px-4 text-right">{{ number_format($producto->total_vendido) }}</td>
+                        <td class="py-3 px-4 text-right font-medium">S/ {{ number_format($producto->total_ingresos, 2) }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="py-4 px-6 text-center text-gray-500">No hay productos para mostrar</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -188,6 +217,44 @@
             </table>
         </div>
     </div>
+
+    <!-- Tabla de Devoluciones Detalladas -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mt-8 animate-fade-in-up">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">Listado de Devoluciones</h3>
+            <span class="text-sm text-gray-500">{{ $devoluciones->count() }} registros</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th scope="col" class="py-3 px-4 text-left">ID</th>
+                        <th scope="col" class="py-3 px-4 text-left">Fecha</th>
+                        <th scope="col" class="py-3 px-4 text-left">Venta #</th>
+                        <th scope="col" class="py-3 px-4 text-left">Motivo</th>
+                        <th scope="col" class="py-3 px-4 text-left">Total Devuelto</th>
+                        <th scope="col" class="py-3 px-4 text-left">Usuario</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @forelse($devoluciones as $devolucion)
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="py-3 px-4 font-medium text-red-600">#{{ $devolucion->id }}</td>
+                        <td class="py-3 px-4">{{ $devolucion->fecha->format('d/m/Y H:i') }}</td>
+                        <td class="py-3 px-4 font-medium text-blue-600">#{{ $devolucion->venta->id ?? 'N/A' }}</td>
+                        <td class="py-3 px-4">{{ $devolucion->motivo }}</td>
+                        <td class="py-3 px-4 font-bold text-red-600">S/ {{ number_format($devolucion->total_devuelto, 2) }}</td>
+                        <td class="py-3 px-4">{{ $devolucion->usuario->name ?? 'N/A' }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6" class="py-4 px-6 text-center text-gray-500">No hay devoluciones en el período seleccionado</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 @push('scripts')
@@ -195,7 +262,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Datos para el gráfico
+        // Datos para el gráfico de métodos de pago
         const paymentData = {
             labels: {!! json_encode($ventasPorMetodo->keys()->map(fn($m) => ucfirst($m))) !!},
             datasets: [{
@@ -213,7 +280,7 @@
             }]
         };
 
-        // Configuración del gráfico
+        // Configuración del gráfico de métodos de pago
         const ctx = document.getElementById('paymentMethodsChart').getContext('2d');
         const paymentMethodsChart = new Chart(ctx, {
             type: 'doughnut',
@@ -247,6 +314,46 @@
                 animation: {
                     animateScale: true,
                     animateRotate: true
+                }
+            }
+        });
+
+        // Gráfico de barras para ventas por día
+        const ventasPorDiaLabels = {!! json_encode(array_keys($ventasAgrupadas->toArray())) !!};
+        const ventasPorDiaData = {!! json_encode(array_values($ventasAgrupadas->toArray())) !!};
+        const ctxVentasPorDia = document.getElementById('ventasPorDiaChart').getContext('2d');
+        new Chart(ctxVentasPorDia, {
+            type: 'bar',
+            data: {
+                labels: ventasPorDiaLabels,
+                datasets: [{
+                    label: 'Ventas por Día',
+                    data: ventasPorDiaData,
+                    backgroundColor: '#2563EB',
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `S/ ${context.raw.toFixed(2)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Fecha' }
+                    },
+                    y: {
+                        title: { display: true, text: 'Total Vendido (S/)' },
+                        beginAtZero: true
+                    }
                 }
             }
         });

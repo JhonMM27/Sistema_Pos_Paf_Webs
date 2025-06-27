@@ -42,10 +42,15 @@
         <div class="summary">
             <h3>Resumen del Período</h3>
             <p><strong>Total de Ventas:</strong> S/ {{ number_format($data['totalVentas'], 2) }}</p>
+            <p><strong>Total de Devoluciones:</strong> S/ {{ number_format($data['totalDevoluciones'], 2) }}</p>
+            <p><strong>Ventas Netas:</strong> S/ {{ number_format($data['ventasNetas'], 2) }}</p>
             <p><strong>Total de Transacciones:</strong> {{ number_format($data['totalTransacciones']) }}</p>
+            <p><strong>Total de Devoluciones:</strong> {{ number_format($data['totalDevolucionesCount']) }}</p>
             <p><strong>Venta Promedio:</strong> S/ {{ number_format($data['promedioVenta'], 2) }}</p>
+            <p><strong>Venta Neta Promedio:</strong> S/ {{ number_format($data['promedioVentaNeta'], 2) }}</p>
         </div>
 
+        <h3>Listado de Ventas</h3>
         <table>
             <thead>
                 <tr>
@@ -76,6 +81,34 @@
                 @endforelse
             </tbody>
         </table>
+
+        @if($data['devoluciones']->count() > 0)
+        <h3 style="margin-top: 30px;">Listado de Devoluciones</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha y Hora</th>
+                    <th>Venta #</th>
+                    <th>Motivo</th>
+                    <th>Total Devuelto</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($data['devoluciones'] as $devolucion)
+                    <tr>
+                        <td>#{{ $devolucion->id }}</td>
+                        <td>{{ $devolucion->fecha->format('d/m/Y H:i') }}</td>
+                        <td>#{{ $devolucion->venta->id ?? 'N/A' }}</td>
+                        <td>{{ $devolucion->motivo }}</td>
+                        <td>S/ {{ number_format($devolucion->total_devuelto, 2) }}</td>
+                        <td>{{ $devolucion->usuario->name ?? 'N/A' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        @endif
     </main>
 </body>
 </html> 
