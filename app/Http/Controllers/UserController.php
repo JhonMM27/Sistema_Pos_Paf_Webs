@@ -26,6 +26,9 @@ class UserController extends Controller
         // Query base para usuarios, filtrando solo por empleados
         $query = User::where('TipoUsuario_id', $tipoEmpleadoId);
 
+        // $permisos = Permission::all();
+
+
         if ($texto) {
             $query->where('name', 'LIKE', '%' . $texto . '%');
         }
@@ -41,6 +44,7 @@ class UserController extends Controller
         }
         
         $permisos = Permission::all();
+
         $tipo_usuario = TipoUsuario::where('name', 'Empleado')->get(); // Solo tipo empleado para el formulario
 
         return view('configure.index', compact(['roles', 'permisos', 'texto', 'registros', 'usuarios', 'tipo_usuario']));
@@ -98,26 +102,17 @@ class UserController extends Controller
         $permisos = Permission::all();
         $tipo_usuario = TipoUsuario::select('id','name')->get();
         $user = User::findOrFail($id);
-        
-        // Cargar explícitamente las relaciones
         $user->load(['roles', 'permissions']);
-        
-        // Log para depuración
-        Log::info('Datos del usuario para edición:', [
-            'user_id' => $user->id,
-            'user_name' => $user->name,
-            'user_roles_count' => $user->roles->count(),
-            'user_permissions_count' => $user->permissions->count(),
-            'total_roles' => $roles->count(),
-            'total_permisos' => $permisos->count(),
-            'tipo_usuario' => $user->TipoUsuario_id
-        ]);
-        
+
+        // Permisos efectivos (directos y por rol)
+        $allPermissions = $user->getAllPermissions()->pluck('name')->toArray();
+
         return response()->json([
             'user' => $user,
             'roles' => $roles,
             'permisos' => $permisos,
-            'tipo_usuario' => $tipo_usuario
+            'tipo_usuario' => $tipo_usuario,
+            'all_permissions' => $allPermissions
         ]);
     }
 

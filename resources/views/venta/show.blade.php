@@ -19,12 +19,14 @@
     }
     .receipt-modern-container {
         width: 100%;
-        max-width: 800px; /* Ancho máximo para la vista en pantalla */
+        max-width: 800px;
         background-color: #fff;
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: #333;
+        display: flex;
+        flex-direction: column;
     }
     .receipt-modern-header {
         background-color: #4a5568;
@@ -33,8 +35,17 @@
         border-top-left-radius: 12px;
         border-top-right-radius: 12px;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        gap: 20px;
         align-items: center;
+        text-align: center;
+    }
+    @media (min-width: 640px) {
+        .receipt-modern-header {
+            flex-direction: row;
+            justify-content: space-between;
+            text-align: left;
+        }
     }
     .receipt-logo img {
         max-height: 60px;
@@ -65,7 +76,7 @@
     }
     .info-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 10px 20px;
     }
     .info-grid p {
@@ -86,10 +97,10 @@
     .receipt-table th, .receipt-table td {
         padding: 12px 15px;
         text-align: left;
+        font-size: 0.9rem;
     }
     .receipt-table th {
         font-weight: 600;
-        font-size: 0.85rem;
         text-transform: uppercase;
     }
     .receipt-table tbody tr {
@@ -104,7 +115,7 @@
     }
     .totals-table {
         width: 100%;
-        max-width: 300px;
+        max-width: 320px;
     }
     .totals-table td {
         padding: 8px 0;
@@ -133,7 +144,10 @@
         border-bottom-left-radius: 12px;
         border-bottom-right-radius: 12px;
     }
-    
+    .action-buttons .flex {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
     @media print {
         body { background-color: #fff; }
         .no-print, .action-buttons {
@@ -146,31 +160,12 @@
             box-shadow: none;
             border: none;
             border-radius: 0;
-            max-width: 100%; /* Ocupa el ancho del papel */
+            max-width: 100%;
             margin: 0;
             padding: 0;
         }
         .receipt-body {
             padding: 20px 10px;
-        }
-    }
-
-    /* Estilos para un formato de ticket de 80mm */
-    @media print and (width: 80mm) {
-        .receipt-modern-container {
-            font-size: 10pt;
-        }
-        .receipt-body {
-            padding: 10px 5px;
-        }
-        .receipt-modern-header {
-            padding: 15px 10px;
-        }
-        .receipt-title h1 {
-            font-size: 1.2rem;
-        }
-        .receipt-table th, .receipt-table td {
-            padding: 8px 5px;
         }
     }
 </style>
@@ -217,10 +212,10 @@
                     <p><strong>Documento:</strong> {{ $venta->cliente->documento ?? 'N/A' }}</p>
                 </div>
             </div>
-
-            <div class="receipt-section items-section">
-                <h5>Resumen del Pedido</h5>
-                <table class="receipt-table">
+            <h5>Resumen del Pedido</h5>
+            
+            <div class="overflow-x-auto md:overflow-visible">
+                <table class="receipt-table min-w-full">
                     <thead>
                         <tr>
                             <th>Producto</th>
@@ -241,6 +236,7 @@
                     </tbody>
                 </table>
             </div>
+            
 
             <div class="receipt-totals">
                 <table class="totals-table">

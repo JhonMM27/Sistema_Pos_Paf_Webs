@@ -89,6 +89,7 @@
             }
 
             @keyframes pulse {
+
                 0%,
                 100% {
                     opacity: 1;
@@ -97,6 +98,36 @@
                 50% {
                     opacity: 0.7;
                 }
+            }
+
+            .barcode-input {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+                font-weight: 600;
+            }
+
+            .barcode-input:focus {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            }
+
+            .camera-scan-btn {
+                margin-left: 0.5rem;
+                background-color: #eff6ff;
+                border: 1px solid #3b82f6;
+                color: #1d4ed8;
+                padding: 0.4rem 0.6rem;
+                border-radius: 0.375rem;
+                cursor: pointer;
+            }
+
+            .camera-scan-btn:hover {
+                background-color: #dbeafe;
+            }
+
+            #cameraModal video {
+                width: 100%;
+                height: auto;
             }
         </style>
     @endpush
@@ -108,7 +139,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h1 class="text-3xl font-bold text-gray-900">Nueva Venta</h1>
-                        <p class="text-gray-600 mt-2">Registra una nueva venta con lector de códigos de barras</p>
+                        <p class="text-gray-600 mt-2">Registra una nueva venta con escáner de código o cámara móvil</p>
                     </div>
                     <div class="flex items-center gap-3">
                         <a href="{{ route('ventas.index') }}"
@@ -125,22 +156,24 @@
                     <!-- Barcode Scanner Section -->
                     <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
                         <h2 class="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                            <i class="fas fa-barcode mr-2 text-blue-600"></i>
-                            Lector de Códigos de Barras
+                            <i class="fas fa-barcode mr-2 text-blue-600"></i> Lector de Códigos de Barras
                         </h2>
-
-                        <div class="relative">
-                            <input type="text" id="barcodeInput"
-                                class="barcode-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
-                                placeholder="Escanea o ingresa el código de barras..." autocomplete="off">
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                <i class="fas fa-search text-gray-400"></i>
+                        <div class="flex items-center gap-2">
+                            <div class="relative flex-1">
+                                <input type="text" id="barcodeInput"
+                                    class="barcode-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
+                                    placeholder="Escanea o ingresa el código de barras..." autocomplete="off">
+                                {{-- <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div> --}}
                             </div>
+                            <button type="button" id="openCameraBtn" class="camera-scan-btn hidden">
+                                <i class="fas fa-camera"></i>
+                            </button>
                         </div>
-
                         <p class="text-sm text-gray-500 mt-2">
                             <i class="fas fa-info-circle mr-1"></i>
-                            El lector se activa automáticamente. Escanea el producto o escribe el código manualmente.
+                            El lector se activa automáticamente. Usa escáner físico o cámara en dispositivos móviles.
                         </p>
                     </div>
 
@@ -261,7 +294,7 @@
                                     <div class="text-sm text-gray-500">Banca por internet</div>
                                 </div>
                             </button>
-                            
+
                             <button
                                 class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center"
                                 data-method="yape">
@@ -340,71 +373,160 @@
         </main>
     </div>
 
-    <!-- Register Client Modal -->
-    <div id="registerClientModal"
-        class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-        <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
-            <div class="mt-3">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-medium text-gray-900">Registrar Nuevo Cliente</h3>
-                    <button id="closeClientModal" class="text-gray-400 hover:text-gray-600">
-                        <i class="fas fa-times text-xl"></i>
-                    </button>
-                </div>
 
-                <form id="clientForm" class="space-y-4">
-                    @csrf
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="md:col-span-2">
-                            <label for="clientName" class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo
-                                <span class="text-red-500">*</span></label>
-                            <input type="text" id="clientName" name="name" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div>
-                            <label for="clientEmail" class="block text-sm font-medium text-gray-700 mb-1">Correo
-                                Electrónico <span class="text-red-500">*</span></label>
-                            <input type="email" id="clientEmail" name="email" required
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div>
-                            <label for="clientDocument" class="block text-sm font-medium text-gray-700 mb-1">Documento
-                                (DNI/RUC)</label>
-                            <input type="text" id="clientDocument" name="documento"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div>
-                            <label for="clientPhone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-                            <input type="text" id="clientPhone" name="telefono"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-
-                        <div>
-                            <label for="clientAddress"
-                                class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                            <input type="text" id="clientAddress" name="direccion"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-                        <button type="button" id="cancelClientBtn"
-                            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Cancelar</button>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            <i class="fas fa-save mr-2"></i>Registrar Cliente
-                        </button>
-                    </div>
-                </form>
-            </div>
+    <!-- Modal para cámara -->
+    <div id="cameraModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-4 rounded-xl w-full max-w-md relative">
+            <button id="closeCameraBtn" class="absolute top-2 right-3 text-gray-500 hover:text-red-500">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <div id="cameraPreview"></div>
+            <p class="text-center text-sm text-gray-600 mt-2">Escanea el código con la cámara</p>
         </div>
     </div>
+
+
+    <!-- Register Client Modal -->
+<div id="registerClientModal"
+class="fixed inset-0 bg-gray-500 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
+<div class="relative w-full max-w-xl mx-auto p-6 bg-white rounded-xl shadow-xl">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-semibold text-gray-900">Registrar Nuevo Cliente</h3>
+        <button id="closeClientModal" aria-label="Cerrar modal" class="text-gray-400 hover:text-gray-600">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+    </div>
+
+    <form id="clientForm" class="space-y-6">
+        @csrf
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+                <label for="clientName" class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo
+                    <span class="text-red-500">*</span></label>
+                <input type="text" id="clientName" name="name" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label for="clientEmail" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico
+                    <span class="text-red-500">*</span></label>
+                <input type="email" id="clientEmail" name="email" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label for="clientDocument" class="block text-sm font-medium text-gray-700 mb-1">Documento (DNI/RUC)</label>
+                <input type="text" id="clientDocument" name="documento"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div>
+                <label for="clientPhone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                <input type="text" id="clientPhone" name="telefono"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <div class="md:col-span-2">
+                <label for="clientAddress" class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                <input type="text" id="clientAddress" name="direccion"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+            <button type="button" id="cancelClientBtn"
+                class="px-5 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Cancelar</button>
+            <button type="submit"
+                class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center justify-center">
+                <i class="fas fa-save mr-2"></i>Registrar Cliente
+            </button>
+        </div>
+    </form>
+</div>
+</div>
+
 @endsection
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script>
+        const barcodeInput = document.getElementById('barcodeInput');
+        const openCameraBtn = document.getElementById('openCameraBtn');
+        const cameraModal = document.getElementById('cameraModal');
+        const closeCameraBtn = document.getElementById('closeCameraBtn');
+        const cameraPreview = document.getElementById('cameraPreview');
+
+        // Mostrar botón cámara solo si es móvil y el navegador soporta HTTPS o es HTTP en Android
+        if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+            const isHttps = location.protocol === 'https:';
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            openCameraBtn.classList.remove('hidden');
+
+            if (isHttps || isAndroid) {
+                openCameraBtn.classList.remove('hidden');
+            } else {
+                console.warn('La cámara solo está disponible por HTTPS o en HTTP desde Android.');
+            }
+        }
+
+        openCameraBtn.addEventListener('click', () => {
+            cameraModal.classList.remove('hidden');
+            startCameraScanner();
+        });
+
+        closeCameraBtn.addEventListener('click', () => {
+            cameraModal.classList.add('hidden');
+            if (window.html5QrCodeScanner) {
+                window.html5QrCodeScanner.stop().then(() => {
+                    cameraPreview.innerHTML = "";
+                });
+            }
+        });
+
+        function startCameraScanner() {
+            const html5QrCode = new Html5Qrcode("cameraPreview");
+            window.html5QrCodeScanner = html5QrCode;
+
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length > 0) {
+                    // Usa la cámara trasera si está disponible
+                    const rearCamera = devices.find(device => /back|rear|environment/i.test(device.label)) ||
+                        devices[0];
+
+                    html5QrCode.start(
+                        rearCamera.id, {
+                            fps: 10,
+                            qrbox: 250
+                        },
+                        (decodedText, decodedResult) => {
+                            barcodeInput.value = decodedText;
+                            barcodeInput.dispatchEvent(new KeyboardEvent('keypress', {
+                                key: 'Enter'
+                            }));
+                            cameraModal.classList.add('hidden');
+                            html5QrCode.stop().then(() => {
+                                cameraPreview.innerHTML = "";
+                            });
+                        },
+                        error => {
+                            // Errores ignorados para evitar ruido visual
+                        }
+                    );
+                } else {
+                    alert('No se encontraron cámaras disponibles.');
+                }
+            }).catch(err => {
+                console.error('Error al acceder a la cámara:', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cámara no disponible',
+                    text: 'El navegador no permite acceder a la cámara en este contexto.'
+                });
+            });
+        }
+    </script>
+
     <script>
         // Global variables
         let cart = [];
@@ -504,7 +626,7 @@
             fetch(`/api/pos/buscar-producto?codigo=${encodeURIComponent(barcode)}`)
                 .then(response => {
                     console.log('Response status:', response.status);
-                    
+
                     // Intentar leer la respuesta JSON primero
                     return response.json().then(data => {
                         // Si la respuesta no es exitosa, lanzar el error con el mensaje del servidor
@@ -525,10 +647,10 @@
                 })
                 .catch(error => {
                     console.error('Error completo:', error);
-                    
+
                     // Mostrar mensaje específico del error
                     let mensajeError = 'Error al buscar producto';
-                    
+
                     if (error.message.includes('Producto no encontrado')) {
                         mensajeError = `❌ Código de barras "${barcode}" no encontrado en el sistema`;
                     } else if (error.message.includes('sin stock')) {
@@ -540,7 +662,7 @@
                     } else {
                         mensajeError = error.message;
                     }
-                    
+
                     showNotification(mensajeError, 'error');
                 });
         }
@@ -552,7 +674,7 @@
             fetch(`/api/pos/buscar-productos?termino=${encodeURIComponent(query)}`)
                 .then(response => {
                     console.log('Response status:', response.status);
-                    
+
                     // Intentar leer la respuesta JSON primero
                     return response.json().then(data => {
                         // Si la respuesta no es exitosa, lanzar el error con el mensaje del servidor
@@ -573,10 +695,10 @@
                 })
                 .catch(error => {
                     console.error('Error completo:', error);
-                    
+
                     // Mostrar mensaje específico del error
                     let mensajeError = 'Error al buscar productos';
-                    
+
                     if (error.message.includes('Término de búsqueda debe tener al menos 2 caracteres')) {
                         mensajeError = `📝 Ingresa al menos 2 caracteres para buscar`;
                     } else if (error.message.includes('No se encontraron productos')) {
@@ -584,7 +706,7 @@
                     } else {
                         mensajeError = error.message;
                     }
-                    
+
                     showNotification(mensajeError, 'error');
                 });
         }
@@ -740,7 +862,7 @@
 
             const canComplete = cart.length > 0 && selectedPaymentMethod;
             const canSaveAsPending = cart.length > 0;
-            
+
             completeBtn.disabled = !canComplete;
             completeAndPrintBtn.disabled = !canComplete;
             saveAsPendingBtn.disabled = !canSaveAsPending;
@@ -826,7 +948,8 @@
         // Sale actions setup
         function setupSaleActions() {
             document.getElementById('completeSaleBtn').addEventListener('click', () => processSale('completada', false));
-            document.getElementById('completeAndPrintSaleBtn').addEventListener('click', () => processSale('completada', true));
+            document.getElementById('completeAndPrintSaleBtn').addEventListener('click', () => processSale('completada',
+                true));
             document.getElementById('saveAsPendingBtn').addEventListener('click', () => processSale('pendiente'));
             document.getElementById('cancelSaleBtn').addEventListener('click', cancelSale);
         }
@@ -871,7 +994,7 @@
                 print: buttons.print.innerHTML,
                 pending: buttons.pending.innerHTML
             };
-            
+
             Object.values(buttons).forEach(btn => {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Procesando...';

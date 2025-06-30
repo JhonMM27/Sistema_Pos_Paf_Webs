@@ -18,33 +18,33 @@
             </div>
         </div>
 
-        <!-- Devolutions Table -->
+        <!-- Devoluciones Table -->
         <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID Devolución</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Venta Original</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Procesado por</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Total Devuelto</th>
-                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase whitespace-nowrap">ID Devolución</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase whitespace-nowrap">Venta Original</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase whitespace-nowrap">Fecha</th>
+                            <th class="px-4 py-3 text-left font-medium text-gray-500 uppercase whitespace-nowrap">Procesado por</th>
+                            <th class="px-4 py-3 text-right font-medium text-gray-500 uppercase whitespace-nowrap">Total Devuelto</th>
+                            <th class="px-4 py-3 text-right font-medium text-gray-500 uppercase whitespace-nowrap">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-gray-100">
                         @forelse($devoluciones as $devolucion)
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 font-medium">#{{ $devolucion->id }}</td>
-                            <td class="px-6 py-4">
+                            <td class="px-4 py-3 font-medium whitespace-nowrap">#{{ $devolucion->id }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">
                                 <a href="{{ route('ventas.show', $devolucion->venta_id) }}" class="text-blue-600 hover:underline">
                                     Venta #{{ $devolucion->venta_id }}
                                 </a>
                             </td>
-                            <td class="px-6 py-4">{{ $devolucion->fecha->format('d/m/Y h:i A') }}</td>
-                            <td class="px-6 py-4">{{ $devolucion->usuario->name ?? 'N/A' }}</td>
-                            <td class="px-6 py-4 text-right font-semibold text-red-600">- S/ {{ number_format($devolucion->total_devuelto, 2) }}</td>
-                            <td class="px-6 py-4 text-right">
+                            <td class="px-4 py-3 whitespace-nowrap">{{ $devolucion->fecha->format('d/m/Y h:i A') }}</td>
+                            <td class="px-4 py-3 whitespace-nowrap">{{ $devolucion->usuario->name ?? 'N/A' }}</td>
+                            <td class="px-4 py-3 text-right font-semibold text-red-600 whitespace-nowrap">- S/ {{ number_format($devolucion->total_devuelto, 2) }}</td>
+                            <td class="px-4 py-3 text-right whitespace-nowrap">
                                 <a href="{{ route('devoluciones.show', $devolucion->id) }}" class="text-blue-600 hover:text-blue-800" title="Ver Detalle de Devolución">
                                     <i class="fas fa-receipt"></i>
                                 </a>
@@ -63,10 +63,10 @@
             </div>
 
             <!-- Paginación -->
-            <div class="p-6">
+            <div class="p-6 border-t border-gray-100">
                 {{ $devoluciones->links() }}
             </div>
         </div>
     </main>
 </div>
-@endsection 
+@endsection

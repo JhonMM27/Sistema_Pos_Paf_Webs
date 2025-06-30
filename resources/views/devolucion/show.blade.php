@@ -8,7 +8,6 @@
 
 @push('estilos')
 <style>
-    /* Estilos similares a la vista de venta/show para consistencia */
     body { background-color: #f4f6f9; }
     .receipt-main-container {
         display: flex;
@@ -25,7 +24,7 @@
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .receipt-modern-header {
-        background-color: #f59e0b; /* Color amarillo para devoluciones */
+        background-color: #f59e0b;
         color: #fff;
         padding: 30px;
         border-top-left-radius: 12px;
@@ -39,13 +38,30 @@
     .receipt-body { padding: 30px; }
     .receipt-section { margin-bottom: 25px; }
     .receipt-section h5 { font-size: 1rem; font-weight: 600; color: #b45309; border-bottom: 1px solid #fde68a; padding-bottom: 8px; }
-    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 20px; }
-    .receipt-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px 20px; }
+    .receipt-table-wrapper { overflow-x: auto; }
+    .receipt-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 0.95rem;
+    }
     .receipt-table thead { background-color: #fef3c7; }
-    .receipt-table th, .receipt-table td { padding: 12px 15px; text-align: left; }
-    .totals-table { width: 100%; max-width: 300px; }
-    .grand-total td { border-top: 2px solid #f59e0b; padding-top: 10px; font-size: 1.4rem; font-weight: bold; color: #b45309; }
-    
+    .receipt-table th, .receipt-table td {
+        padding: 10px 12px;
+        text-align: left;
+        white-space: nowrap;
+    }
+    .receipt-table .text-center { text-align: center; }
+    .receipt-table .text-right { text-align: right; }
+    .totals-table { width: 100%; max-width: 300px; font-size: 1rem; }
+    .grand-total td {
+        border-top: 2px solid #f59e0b;
+        padding-top: 10px;
+        font-size: 1.4rem;
+        font-weight: bold;
+        color: #b45309;
+    }
     @media print {
         body { background-color: #fff; }
         .no-print { display: none !important; }
@@ -58,7 +74,6 @@
 @section('contenido')
 <div class="receipt-main-container">
     <div class="receipt-modern-container">
-        
         <div class="no-print p-4 border-b">
             <h1 class="text-xl font-bold">Detalle de Devolución</h1>
             <a href="{{ route('devoluciones.index') }}" class="text-blue-600 hover:underline">&larr; Volver al listado de devoluciones</a>
@@ -85,26 +100,28 @@
 
             <div class="receipt-section">
                 <h5>Productos Devueltos</h5>
-                <table class="receipt-table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th class="text-center">Cant. Devuelta</th>
-                            <th class="text-right">P. Unitario</th>
-                            <th class="text-right">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($devolucion->detalles as $detalle)
-                        <tr>
-                            <td>{{ $detalle->producto->nombre }}</td>
-                            <td class="text-center">{{ $detalle->cantidad }}</td>
-                            <td class="text-right">S/ {{ number_format($detalle->precio_unitario, 2) }}</td>
-                            <td class="text-right">S/ {{ number_format($detalle->subtotal, 2) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="receipt-table-wrapper">
+                    <table class="receipt-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cant. Devuelta</th>
+                                <th class="text-right">P. Unitario</th>
+                                <th class="text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($devolucion->detalles as $detalle)
+                            <tr>
+                                <td>{{ $detalle->producto->nombre }}</td>
+                                <td class="text-center">{{ $detalle->cantidad }}</td>
+                                <td class="text-right">S/ {{ number_format($detalle->precio_unitario, 2) }}</td>
+                                <td class="text-right">S/ {{ number_format($detalle->subtotal, 2) }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             @if($devolucion->motivo)
@@ -131,4 +148,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

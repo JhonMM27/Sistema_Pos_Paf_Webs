@@ -16,15 +16,18 @@
         justify-content: center;
         align-items: flex-start;
         padding: 20px;
+        margin: 0 auto;
+        max-width: 100%;
     }
     .receipt-modern-container {
         width: 100%;
-        max-width: 800px; /* Ancho máximo para la vista en pantalla */
+        max-width: 800px;
         background-color: #fff;
         border-radius: 12px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: #333;
+        overflow: hidden;
     }
     .receipt-modern-header {
         background-color: #4a5568;
@@ -132,8 +135,31 @@
         background-color: #f8f9fa;
         border-bottom-left-radius: 12px;
         border-bottom-right-radius: 12px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
     }
-    
+
+    @media (max-width: 640px) {
+        .receipt-modern-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+        .receipt-body {
+            padding: 15px;
+        }
+        .receipt-table {
+            display: block;
+            overflow-x: auto;
+            width: 100%;
+        }
+        .receipt-table table {
+            min-width: 600px;
+        }
+    }
+
     @media print {
         body { background-color: #fff; }
         .no-print, .action-buttons {
@@ -205,26 +231,28 @@
 
             <div class="receipt-section items-section">
                 <h5>Resumen de la Compra</h5>
-                <table class="receipt-table">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th class="text-center">Cant.</th>
-                            <th class="text-right">Costo Unitario</th>
-                            <th class="text-right">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($compra->detalles as $detalle)
-                        <tr>
-                            <td>{{ $detalle->producto->nombre ?? 'Producto no encontrado' }}</td>
-                            <td class="text-center">{{ $detalle->cantidad }}</td>
-                            <td class="text-right">S/ {{ number_format($detalle->precio_unitario, 2) }}</td>
-                            <td class="text-right">S/ {{ number_format($detalle->cantidad * $detalle->precio_unitario, 2) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <div class="overflow-x-auto">
+                    <table class="receipt-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cant.</th>
+                                <th class="text-right">Costo Unitario</th>
+                                <th class="text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($compra->detalles as $detalle)
+                            <tr>
+                                <td>{{ $detalle->producto->nombre ?? 'Producto no encontrado' }}</td>
+                                <td class="text-center">{{ $detalle->cantidad }}</td>
+                                <td class="text-right">S/ {{ number_format($detalle->precio_unitario, 2) }}</td>
+                                <td class="text-right">S/ {{ number_format($detalle->cantidad * $detalle->precio_unitario, 2) }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="receipt-totals">
@@ -253,28 +281,26 @@
         <div class="receipt-footer">
             <p>Comprobante de Ingreso de Mercancía.</p>
         </div>
-        
-        <div class="action-buttons no-print text-center">
-            <div class="flex flex-wrap justify-center gap-4">
-                <button onclick="window.print()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
-                    <i class="fas fa-print mr-2"></i> Imprimir Comprobante
-                </button>
 
-                <a href="{{ route('compras.index') }}" class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center">
-                    <i class="fas fa-arrow-left mr-2"></i> Volver
-                </a>
+        <div class="action-buttons no-print">
+            <button onclick="window.print()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                <i class="fas fa-print mr-2"></i> Imprimir Comprobante
+            </button>
 
-                @if($compra->estado !== 'anulada')
-                    <form action="{{ route('compras.destroy', $compra->id) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de anular esta compra? La acción revertirá el stock de los productos.')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center">
-                            <i class="fas fa-ban mr-2"></i> Anular Compra
-                        </button>
-                    </form>
-                @endif
-            </div>
+            <a href="{{ route('compras.index') }}" class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center">
+                <i class="fas fa-arrow-left mr-2"></i> Volver
+            </a>
+
+            @if($compra->estado !== 'anulada')
+                <form action="{{ route('compras.destroy', $compra->id) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de anular esta compra? La acción revertirá el stock de los productos.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center">
+                        <i class="fas fa-ban mr-2"></i> Anular Compra
+                    </button>
+                </form>
+            @endif
         </div>
     </div>
 </div>
-@endsection 
+@endsection

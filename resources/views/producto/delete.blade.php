@@ -1,17 +1,25 @@
-<div id="modalDeleteProduct" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 hidden">
-    <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md relative">
+<div id="modalDeleteProduct" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-30 hidden overflow-y-auto">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-md mx-auto my-10 p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
+        <!-- Botón cerrar -->
         <button type="button" class="absolute top-3 right-3 text-red-600 hover:text-red-900 text-2xl close-modal"
             data-modal="modalDeleteProduct">
             <i class="fas fa-times"></i>
         </button>
+
+        <!-- Título -->
         <h2 class="text-xl font-bold text-red-800 mb-4 flex items-center gap-2">
             <i class="fas fa-exclamation-triangle text-red-500"></i> Eliminar Producto
         </h2>
+
+        <!-- Formulario -->
         <form id="formDeleteProduct" method="POST" action="">
             @csrf
             @method('DELETE')
             <input type="hidden" name="id" id="delete_id">
+
+            <!-- Cuerpo del modal -->
             <div class="space-y-4">
+                <!-- Mensaje de advertencia -->
                 <div class="bg-red-50 border border-red-100 rounded-lg p-4">
                     <div class="flex items-start">
                         <i class="fas fa-info-circle text-red-500 mt-0.5 mr-2"></i>
@@ -21,6 +29,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Campo nombre del producto -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Producto a eliminar</label>
                     <div class="relative">
@@ -32,7 +42,9 @@
                     </div>
                 </div>
             </div>
-            <div class="mt-6 flex justify-end gap-2">
+
+            <!-- Botones -->
+            <div class="mt-6 flex flex-col sm:flex-row justify-end gap-2">
                 <button type="button"
                     class="close-modal px-4 py-2 rounded-md border border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100 transition"
                     data-modal="modalDeleteProduct">Cancelar</button>

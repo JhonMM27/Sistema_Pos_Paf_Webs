@@ -128,25 +128,3 @@
         </div>
     </div>
 </div>
-
-{{-- <script>
-    // Funcionalidad del modal de editar proveedor
-    document.getElementById('editProviderBtn-{{ $reg->id }}').addEventListener('click', function() {
-        document.getElementById('editProviderModal-{{ $reg->id }}').classList.remove('hidden');
-    });
-
-    document.querySelector('.closeEditProviderModal[data-id="{{ $reg->id }}"]').addEventListener('click', function() {
-        document.getElementById('editProviderModal-{{ $reg->id }}').classList.add('hidden');
-    });
-
-    document.querySelector('.cancelEditProvider[data-id="{{ $reg->id }}"]').addEventListener('click', function() {
-        document.getElementById('editProviderModal-{{ $reg->id }}').classList.add('hidden');
-    });
-
-    // Cerrar modal al hacer clic fuera de él
-    document.getElementById('editProviderModal-{{ $reg->id }}').addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.add('hidden');
-        }
-    });
-</script>  --}}

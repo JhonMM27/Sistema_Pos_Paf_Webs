@@ -1,34 +1,44 @@
 <!-- Modal Eliminar Cliente -->
-<div id="deleteClientModal-{{ $cliente->id }}" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-1/4 mx-auto p-5 border w-11/12 md:w-1/3 shadow-lg rounded-md bg-white">
-        <div class="mt-3 text-center">
-            <!-- Icono de advertencia -->
-            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
-                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
-            </div>
-            <!-- Título -->
-            <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4">¿Eliminar Cliente?</h3>
-            <!-- Mensaje -->
-            <div class="mt-2 px-7 py-3">
-                <p class="text-sm text-gray-500">
-                    ¿Estás seguro de que deseas eliminar al cliente
-                    <span class="font-bold">{{ $cliente->name }}</span>?
-                    Esta acción no se puede deshacer.
-                </p>
-            </div>
-            <!-- Formulario y Botones -->
-            <form id="deleteClientForm-{{ $cliente->id }}" action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" class="mt-4">
-                @csrf
-                @method('DELETE')
-                <div class="items-center px-4 py-3">
-                    <button type="submit" class="px-4 py-2 bg-red-600 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">
-                        <i class="fas fa-trash-alt mr-2"></i>Sí, eliminar
-                    </button>
-                    <button type="button" class="cancelDeleteClient mt-3 px-4 py-2 bg-gray-200 text-gray-700 text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500" data-id="{{ $cliente->id }}">
-                        Cancelar
-                    </button>
+<div id="deleteClientModal-{{ $cliente->id }}" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden">
+    <div class="bg-white w-full max-w-md mx-4 rounded-xl shadow-2xl overflow-hidden animate-[fadeIn_0.3s_ease-out]">
+        <!-- Encabezado -->
+        <div class="px-6 py-4 border-b border-gray-100 bg-gradient-to-r from-red-50 to-white flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-red-100 p-2 rounded-lg">
+                    <i class="fas fa-exclamation-triangle text-red-600 text-lg"></i>
                 </div>
-            </form>
+                <h3 class="text-xl font-semibold text-gray-800">Confirmar Eliminación</h3>
+            </div>
+            <button class="cancelDeleteClient text-gray-400 hover:text-gray-600 transition-colors" data-id="{{ $cliente->id }}">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
+
+        <!-- Contenido -->
+        <div class="px-6 py-6 text-center space-y-4">
+            <p class="text-gray-700 text-sm">
+                ¿Estás seguro de que deseas eliminar al cliente
+                <span class="font-bold text-red-600">{{ $cliente->name }}</span>?
+                Esta acción no se puede deshacer.
+            </p>
+        </div>
+
+        <!-- Formulario -->
+        <form id="deleteClientForm-{{ $cliente->id }}" action="{{ route('clientes.destroy', $cliente->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <!-- Botones -->
+            <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
+                <button type="button"
+                    class="cancelDeleteClient px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                    data-id="{{ $cliente->id }}">
+                    <i class="fas fa-times mr-2"></i> Cancelar
+                </button>
+                <button type="submit"
+                    class="px-5 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center">
+                    <i class="fas fa-trash-alt mr-2"></i> Eliminar
+                </button>
+            </div>
+        </form>
     </div>
-</div> 
+</div>
