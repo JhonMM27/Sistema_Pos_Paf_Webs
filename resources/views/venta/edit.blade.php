@@ -102,10 +102,11 @@
 @section('contenido')
     <div class="w-full px-4 py-6">
         <main class="w-full px-4 md:px-6 py-6">
-            <div class="mb-6">
+            <div class="mb-6 flex items-center gap-2">
+                <i class="fas fa-edit text-yellow-500 text-2xl"></i>
                 <h1 class="text-3xl font-bold text-gray-900">Editar Venta #{{ $venta->id }}</h1>
-                <p class="text-gray-600 mt-2">Modifica los productos y finaliza la venta pendiente.</p>
             </div>
+            <p class="text-gray-600 mt-2">Modifica los productos y finaliza la venta pendiente.</p>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 space-y-6">
@@ -125,7 +126,7 @@
 
                     <div class="bg-white rounded-xl shadow-md">
                         <div class="p-6 border-b">
-                            <h2 class="text-xl font-semibold">
+                            <h2 class="text-xl font-semibold mb-4 flex items-center">
                                 <i class="fas fa-shopping-cart mr-2 text-purple-600"></i> Carrito de Compras
                             </h2>
                         </div>
@@ -137,7 +138,7 @@
 
                 <div class="space-y-6">
                     <div class="bg-white rounded-xl shadow-md p-6">
-                        <h2 class="text-xl font-semibold mb-4">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center">
                             <i class="fas fa-user mr-2 text-indigo-600"></i> Cliente
                         </h2>
                         <select id="clienteSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
@@ -152,7 +153,7 @@
                     </div>
 
                     <div class="bg-white rounded-xl shadow-md p-6">
-                        <h2 class="text-xl font-semibold mb-4">
+                        <h2 class="text-xl font-semibold mb-4 flex items-center">
                             <i class="fas fa-credit-card mr-2 text-green-600"></i> Método de Pago
                         </h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -198,14 +199,17 @@
                             </div>
                             <div class="space-y-3 pt-2">
                                 <button id="updateAndCompleteBtn"
-                                    class="w-full px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center disabled:opacity-50"
-                                    disabled>
-                                    <i class="fas fa-check mr-2"></i> Actualizar y Completar
+                                    class="w-full px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2">
+                                    <i class="fas fa-check"></i> Actualizar y Completar
                                 </button>
-                                <a href="{{ route('ventas.index') }}"
-                                    class="block text-center w-full px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
-                                    Cancelar
-                                </a>
+                                <button id="saveAsPendingBtn"
+                                    class="w-full px-6 py-3 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2">
+                                    <i class="fas fa-save"></i> Guardar como Pendiente
+                                </button>
+                                <button id="cancelEditBtn"
+                                    class="w-full px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
                             </div>
                         </div>
                     </div>

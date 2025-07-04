@@ -1,6 +1,6 @@
 <!-- Modal Editar Proveedor -->
-<div id="editProviderModal-{{ $reg->id }}" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
-    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+<div id="editProviderModal-{{ $reg->id }}" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity duration-300">
+    <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 md:mx-6 sm:mx-2 overflow-y-auto max-h-[90vh]">
         <div class="mt-3">
             <!-- Header del Modal -->
             <div class="flex items-center justify-between mb-4">

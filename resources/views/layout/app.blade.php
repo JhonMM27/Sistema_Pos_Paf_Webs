@@ -68,7 +68,7 @@
                 @include('layout.sidebar')
             </div>
         @endif
-        <main class="main-content flex-1 w-full lg:ml-72 transition-all duration-300">
+        <main class="main-content flex-1 w-full transition-all duration-300">
             @yield('contenido')
         </main>
     </div>

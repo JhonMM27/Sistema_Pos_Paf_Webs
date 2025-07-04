@@ -447,4 +447,24 @@ class VentaController extends Controller
             return back()->with('error', 'Ocurrió un error al anular la venta.');
         }
     }
+
+    /**
+     * Buscar clientes por nombre o DNI (AJAX)
+     */
+    public function buscarCliente(Request $request)
+    {
+        Log::info('Buscando cliente AJAX', ['user_id' => Auth::id(), 'q' => $request->input('q')]);
+        $q = $request->input('q');
+        $tipoClienteId = \App\Models\TipoUsuario::where('name', 'Cliente')->value('id');
+        $clientes = \App\Models\User::where('TipoUsuario_id', $tipoClienteId)
+            ->where(function($query) use ($q) {
+                $query->where('name', 'like', "%$q%")
+                      ->orWhere('documento', 'like', "%$q%")
+                      ->orWhere('email', 'like', "%$q%") ;
+            })
+            ->select('id', 'name', 'email', 'documento')
+            ->limit(10)
+            ->get();
+        return response()->json($clientes);
+    }
 }

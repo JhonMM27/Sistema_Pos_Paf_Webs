@@ -31,7 +31,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-Route::prefix('inventario')->group(function () {
+    Route::prefix('inventario')->group(function () {
         // Route::get('/', function () {
         //     return view('inventario.index');
         // })->name('inventario.index');        
@@ -52,6 +52,7 @@ Route::prefix('inventario')->group(function () {
         Route::get('buscar-producto', [VentaController::class, 'buscarProducto'])->name('buscar-producto');
         Route::get('buscar-productos', [VentaController::class, 'buscarProductos'])->name('buscar-productos');
         Route::post('registrar-cliente', [VentaController::class, 'registrarCliente'])->name('registrar-cliente');
+        Route::get('buscar-cliente', [VentaController::class, 'buscarCliente'])->name('buscar-cliente');
     });
 
     // Rutas API para la interfaz de compras
@@ -85,6 +86,7 @@ Route::prefix('inventario')->group(function () {
         Route::get('exportar/ventas', [ReporteController::class, 'exportarVentas'])->name('exportar.ventas');
         Route::get('exportar/compras', [ReporteController::class, 'exportarCompras'])->name('exportar.compras');
         Route::get('exportar/ganancias', [ReporteController::class, 'exportarGanancias'])->name('exportar.ganancias');
+        Route::get('inventario', [ReporteController::class, 'inventario'])->name('inventario');
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

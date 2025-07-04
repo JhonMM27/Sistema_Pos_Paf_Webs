@@ -28,8 +28,11 @@ class CompraController extends Controller
         $proveedores = Provedor::all();
         $productos = Producto::all();
         $categorias = \App\Models\Categoria::all();
-        
-        return view('compra.create', compact('proveedores', 'productos', 'categorias'));
+        // Productos sin stock
+        $productosSinStock = Producto::with('categoria')->where('stock', '<=', 0)->get();
+        // Top 10 productos con menor stock
+        $productosCriticos = Producto::with('categoria')->orderBy('stock', 'asc')->limit(10)->get();
+        return view('compra.create', compact('proveedores', 'productos', 'categorias', 'productosSinStock', 'productosCriticos'));
     }
 
     public function store(Request $request)

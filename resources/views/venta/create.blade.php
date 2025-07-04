@@ -137,17 +137,18 @@
             <!-- Header -->
             <div class="mb-6">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-cash-register text-blue-600 text-3xl"></i>
                         <h1 class="text-3xl font-bold text-gray-900">Nueva Venta</h1>
-                        <p class="text-gray-600 mt-2">Registra una nueva venta con escáner de código o cámara móvil</p>
                     </div>
                     <div class="flex items-center gap-3">
                         <a href="{{ route('ventas.index') }}"
-                            class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
+                            class="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors flex items-center">
                             <i class="fas fa-arrow-left mr-2"></i>Volver
                         </a>
                     </div>
                 </div>
+                <p class="text-gray-600 mt-2 ml-1 flex items-center"><i class="fas fa-info-circle mr-2"></i>Registra una nueva venta con escáner de código o cámara móvil</p>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -160,18 +161,16 @@
                         </h2>
                         <div class="flex items-center gap-2">
                             <div class="relative flex-1">
+                                <i class="fas fa-barcode absolute left-3 top-3 text-blue-300"></i>
                                 <input type="text" id="barcodeInput"
-                                    class="barcode-input w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
+                                    class="barcode-input w-full pl-10 px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
                                     placeholder="Escanea o ingresa el código de barras..." autocomplete="off">
-                                {{-- <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                    <i class="fas fa-search text-gray-400"></i>
-                                </div> --}}
                             </div>
                             <button type="button" id="openCameraBtn" class="camera-scan-btn hidden">
                                 <i class="fas fa-camera"></i>
                             </button>
                         </div>
-                        <p class="text-sm text-gray-500 mt-2">
+                        <p class="text-sm text-gray-500 mt-2 flex items-center">
                             <i class="fas fa-info-circle mr-1"></i>
                             El lector se activa automáticamente. Usa escáner físico o cámara en dispositivos móviles.
                         </p>
@@ -185,8 +184,9 @@
                         </h2>
 
                         <div class="relative">
+                            <i class="fas fa-search absolute left-3 top-3 text-green-300"></i>
                             <input type="text" id="productSearchInput"
-                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                                class="w-full pl-10 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                                 placeholder="Busca productos por nombre, código o descripción..." autocomplete="off">
 
                             <!-- Search Results Dropdown -->
@@ -227,31 +227,24 @@
                             <i class="fas fa-user mr-2 text-indigo-600"></i>
                             Cliente
                         </h2>
-
                         <div class="space-y-4">
                             <div>
-                                <label for="clienteSelect" class="block text-sm font-medium text-gray-700 mb-2">
-                                    Seleccionar Cliente
-                                </label>
-                                <select id="clienteSelect"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="">Cliente General</option>
-                                    @foreach ($clientes as $cliente)
-                                        <option value="{{ $cliente->id }}" data-email="{{ $cliente->email }}"
-                                            data-documento="{{ $cliente->documento }}">
-                                            {{ $cliente->name }} - {{ $cliente->documento ?: 'Sin documento' }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <label for="clienteSearchInput" class="block text-sm font-medium text-gray-700 mb-2 flex items-center"><i class="fas fa-user mr-1 text-indigo-300"></i>Buscar Cliente (DNI o Nombre)</label>
+                                <div class="relative">
+                                    <input type="text" id="clienteSearchInput" autocomplete="off"
+                                        class="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                        placeholder="Escribe el nombre o DNI del cliente...">
+                                    <i class="fas fa-search absolute left-3 top-3 text-indigo-300"></i>
+                                    <div id="clienteSearchResults" class="absolute w-full bg-white border border-gray-200 rounded-lg shadow-lg mt-1 hidden z-20"></div>
+                                    <input type="hidden" id="clienteSelect" name="cliente_id" value="">
+                                </div>
                             </div>
-
                             <div class="text-center">
                                 <span class="text-gray-500 text-sm">o</span>
                             </div>
-
                             <button id="registerClientBtn"
-                                class="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center">
-                                <i class="fas fa-user-plus mr-2"></i>
+                                class="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+                                <i class="fas fa-user-plus"></i>
                                 Registrar Nuevo Cliente
                             </button>
                         </div>
@@ -266,9 +259,9 @@
 
                         <div class="grid grid-cols-1 gap-3">
                             <button
-                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center"
+                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center gap-2"
                                 data-method="efectivo">
-                                <i class="fas fa-money-bill-wave text-green-600 text-xl mr-3"></i>
+                                <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
                                 <div>
                                     <div class="font-medium">Efectivo</div>
                                     <div class="text-sm text-gray-500">Pago en efectivo</div>
@@ -276,9 +269,9 @@
                             </button>
 
                             <button
-                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center"
+                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center gap-2"
                                 data-method="tarjeta">
-                                <i class="fas fa-credit-card text-blue-600 text-xl mr-3"></i>
+                                <i class="fas fa-credit-card text-blue-600 text-xl"></i>
                                 <div>
                                     <div class="font-medium">Tarjeta</div>
                                     <div class="text-sm text-gray-500">Débito o crédito</div>
@@ -286,9 +279,9 @@
                             </button>
 
                             <button
-                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center"
+                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center gap-2"
                                 data-method="transferencia">
-                                <i class="fas fa-university text-purple-600 text-xl mr-3"></i>
+                                <i class="fas fa-university text-purple-600 text-xl"></i>
                                 <div>
                                     <div class="font-medium">Transferencia</div>
                                     <div class="text-sm text-gray-500">Banca por internet</div>
@@ -296,9 +289,9 @@
                             </button>
 
                             <button
-                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center"
+                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center gap-2"
                                 data-method="yape">
-                                <i class="fas fa-mobile-alt text-purple-700 text-xl mr-3"></i>
+                                <i class="fas fa-mobile-alt text-purple-700 text-xl"></i>
                                 <div>
                                     <div class="font-medium">Yape</div>
                                     <div class="text-sm text-gray-500">Billetera digital</div>
@@ -306,9 +299,9 @@
                             </button>
 
                             <button
-                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center"
+                                class="payment-method-btn p-4 border border-gray-200 rounded-lg text-left flex items-center gap-2"
                                 data-method="plin">
-                                <i class="fas fa-bolt text-blue-500 text-xl mr-3"></i>
+                                <i class="fas fa-bolt text-blue-500 text-xl"></i>
                                 <div>
                                     <div class="font-medium">Plin</div>
                                     <div class="text-sm text-gray-500">Billetera digital</div>
@@ -321,47 +314,47 @@
                     <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
                         <div class="space-y-4">
                             <div class="flex justify-between items-center text-lg font-medium">
-                                <span>Subtotal:</span>
+                                <span><i class="fas fa-money-bill-wave text-green-400 mr-1"></i>Subtotal:</span>
                                 <span id="subtotal">S/ 0.00</span>
                             </div>
 
                             <div class="flex justify-between items-center text-lg font-medium">
-                                <span>IGV (18%):</span>
+                                <span><i class="fas fa-percentage text-yellow-400 mr-1"></i>IGV (18%):</span>
                                 <span id="igv">S/ 0.00</span>
                             </div>
 
                             <hr class="border-gray-200">
 
                             <div class="flex justify-between items-center text-2xl font-bold total-display p-4 rounded-lg">
-                                <span>TOTAL:</span>
+                                <span><i class="fas fa-coins text-blue-200 mr-1"></i>TOTAL:</span>
                                 <span id="total">S/ 0.00</span>
                             </div>
 
                             <div class="space-y-3">
                                 <button id="completeSaleBtn"
-                                    class="w-full px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="w-full px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled>
-                                    <i class="fas fa-check mr-2"></i>
+                                    <i class="fas fa-check"></i>
                                     Completar Venta
                                 </button>
 
                                 <button id="completeAndPrintSaleBtn"
-                                    class="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled>
-                                    <i class="fas fa-print mr-2"></i>
+                                    <i class="fas fa-print"></i>
                                     Completar e Imprimir
                                 </button>
 
                                 <button id="saveAsPendingBtn"
-                                    class="w-full px-6 py-3 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="w-full px-6 py-3 bg-yellow-500 text-white font-medium rounded-lg hover:bg-yellow-600 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                     disabled>
-                                    <i class="fas fa-save mr-2"></i>
+                                    <i class="fas fa-save"></i>
                                     Guardar como Pendiente
                                 </button>
 
                                 <button id="cancelSaleBtn"
-                                    class="w-full px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center">
-                                    <i class="fas fa-times mr-2"></i>
+                                    class="w-full px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
+                                    <i class="fas fa-times"></i>
                                     Cancelar Venta
                                 </button>
                             </div>
@@ -375,8 +368,8 @@
 
 
     <!-- Modal para cámara -->
-    <div id="cameraModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden z-50">
-        <div class="bg-white p-4 rounded-xl w-full max-w-md relative">
+    <div id="cameraModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 md:mx-6 sm:mx-2 overflow-y-auto max-h-[90vh]">
             <button id="closeCameraBtn" class="absolute top-2 right-3 text-gray-500 hover:text-red-500">
                 <i class="fas fa-times text-xl"></i>
             </button>
@@ -387,63 +380,62 @@
 
 
     <!-- Register Client Modal -->
-<div id="registerClientModal"
-class="fixed inset-0 bg-gray-500 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center">
-<div class="relative w-full max-w-xl mx-auto p-6 bg-white rounded-xl shadow-xl">
-    <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-semibold text-gray-900">Registrar Nuevo Cliente</h3>
-        <button id="closeClientModal" aria-label="Cerrar modal" class="text-gray-400 hover:text-gray-600">
-            <i class="fas fa-times text-xl"></i>
-        </button>
+    <div id="registerClientModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 md:mx-6 sm:mx-2 overflow-y-auto max-h-[90vh]">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold text-gray-900">Registrar Nuevo Cliente</h3>
+                <button id="closeClientModal" aria-label="Cerrar modal" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <form id="clientForm" class="space-y-6">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label for="clientName" class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo
+                            <span class="text-red-500">*</span></label>
+                        <input type="text" id="clientName" name="name" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="clientEmail" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico
+                            <span class="text-red-500">*</span></label>
+                        <input type="email" id="clientEmail" name="email" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="clientDocument" class="block text-sm font-medium text-gray-700 mb-1">Documento (DNI/RUC)</label>
+                        <input type="text" id="clientDocument" name="documento"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div>
+                        <label for="clientPhone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
+                        <input type="text" id="clientPhone" name="telefono"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="clientAddress" class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
+                        <input type="text" id="clientAddress" name="direccion"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
+                    <button type="button" id="cancelClientBtn"
+                        class="px-5 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Cancelar</button>
+                    <button type="submit"
+                        class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center justify-center">
+                        <i class="fas fa-save mr-2"></i>Registrar Cliente
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <form id="clientForm" class="space-y-6">
-        @csrf
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="md:col-span-2">
-                <label for="clientName" class="block text-sm font-medium text-gray-700 mb-1">Nombre Completo
-                    <span class="text-red-500">*</span></label>
-                <input type="text" id="clientName" name="name" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-
-            <div>
-                <label for="clientEmail" class="block text-sm font-medium text-gray-700 mb-1">Correo Electrónico
-                    <span class="text-red-500">*</span></label>
-                <input type="email" id="clientEmail" name="email" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-
-            <div>
-                <label for="clientDocument" class="block text-sm font-medium text-gray-700 mb-1">Documento (DNI/RUC)</label>
-                <input type="text" id="clientDocument" name="documento"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-
-            <div>
-                <label for="clientPhone" class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-                <input type="text" id="clientPhone" name="telefono"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-
-            <div class="md:col-span-2">
-                <label for="clientAddress" class="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                <input type="text" id="clientAddress" name="direccion"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-            </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-gray-200">
-            <button type="button" id="cancelClientBtn"
-                class="px-5 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">Cancelar</button>
-            <button type="submit"
-                class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center justify-center">
-                <i class="fas fa-save mr-2"></i>Registrar Cliente
-            </button>
-        </div>
-    </form>
-</div>
-</div>
 
 @endsection
 
@@ -549,6 +541,54 @@ class="fixed inset-0 bg-gray-500 bg-opacity-50 overflow-y-auto h-full w-full hid
             setupClientSelection();
             setupClientModal();
             setupSaleActions();
+
+            // --- Cliente autocompletar ---
+            const clienteSearchInput = document.getElementById('clienteSearchInput');
+            const clienteSearchResults = document.getElementById('clienteSearchResults');
+            const clienteSelect = document.getElementById('clienteSelect');
+            let clienteTimeout = null;
+            clienteSearchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query.length < 2) {
+                    clienteSearchResults.innerHTML = '';
+                    clienteSearchResults.classList.add('hidden');
+                    clienteSelect.value = '';
+                    return;
+                }
+                clearTimeout(clienteTimeout);
+                clienteTimeout = setTimeout(() => {
+                    fetch(`/api/pos/buscar-cliente?q=${encodeURIComponent(query)}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.length === 0) {
+                                clienteSearchResults.innerHTML = '<div class="p-3 text-gray-500">No se encontraron clientes</div>';
+                                clienteSearchResults.classList.remove('hidden');
+                                return;
+                            }
+                            clienteSearchResults.innerHTML = data.map(cliente => `
+                                <div class="p-3 hover:bg-indigo-50 cursor-pointer flex flex-col sm:flex-row sm:items-center gap-2 border-b last:border-b-0" data-id="${cliente.id}" data-nombre="${cliente.name}">
+                                    <span class="font-semibold text-indigo-700">${cliente.name}</span>
+                                    <span class="text-xs text-gray-500">DNI: ${cliente.documento || '-'}</span>
+                                    <span class="text-xs text-gray-400">${cliente.email || ''}</span>
+                                </div>
+                            `).join('');
+                            clienteSearchResults.classList.remove('hidden');
+                        });
+                }, 250);
+            });
+            clienteSearchResults.addEventListener('click', function(e) {
+                const item = e.target.closest('[data-id]');
+                if (item) {
+                    clienteSearchInput.value = item.getAttribute('data-nombre');
+                    clienteSelect.value = item.getAttribute('data-id');
+                    clienteSearchResults.classList.add('hidden');
+                }
+            });
+            document.addEventListener('click', function(e) {
+                if (!clienteSearchResults.contains(e.target) && e.target !== clienteSearchInput) {
+                    clienteSearchResults.classList.add('hidden');
+                }
+            });
         });
 
         // Barcode Scanner Setup

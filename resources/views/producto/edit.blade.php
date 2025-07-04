@@ -1,5 +1,5 @@
-<div id="modalEditProduct" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-30 hidden overflow-y-auto">
-    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg mx-auto my-10 p-4 sm:p-6 relative max-h-[90vh] overflow-y-auto">
+<div id="modalEditProduct" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity duration-300 overflow-y-auto">
+    <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 md:mx-6 sm:mx-2 max-h-[90vh]">
         <!-- Botón cerrar -->
         <button type="button" class="absolute top-3 right-3 text-green-600 hover:text-green-900 text-2xl close-modal"
             data-modal="modalEditProduct">

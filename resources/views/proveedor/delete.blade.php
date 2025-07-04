@@ -1,6 +1,6 @@
 <!-- Modal Eliminar Proveedor -->
-<div id="deleteProviderModal-{{ $reg->id }}" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 overflow-hidden border-l-4 border-red-500 transform transition-all duration-300">
+<div id="deleteProviderModal-{{ $reg->id }}" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity duration-300">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 md:mx-6 sm:mx-2 overflow-y-auto max-h-[90vh]">
         <!-- Encabezado -->
         <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
             <div class="flex items-center space-x-3">

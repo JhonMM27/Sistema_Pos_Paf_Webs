@@ -80,9 +80,9 @@
             <!-- Header -->
             <div class="mb-8">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 flex-wrap">
-                    <div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-cash-register text-blue-600 text-3xl"></i>
                         <h1 class="text-3xl font-bold text-gray-900">Gestión de Ventas</h1>
-                        <p class="text-gray-600 mt-2">Administra y visualiza todas las ventas del sistema</p>
                     </div>
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
                         <a href="{{ route('ventas.create') }}" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg hover:shadow-xl">
@@ -120,18 +120,30 @@
             <!-- Filters -->
             <div class="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-100">
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                    <input type="text" id="searchInput" placeholder="Buscar por cliente, vendedor o ID de venta..." class="search-input w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                    <select id="statusFilter" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Todos los estados</option>
-                        <option value="completada">Completadas</option>
-                        <option value="pendiente">Pendientes</option>
-                        <option value="cancelada">Canceladas</option>
-                    </select>
-                    <input type="date" id="dateFrom" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
-                    <input type="date" id="dateTo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="searchInput" placeholder="Buscar por cliente, vendedor o ID de venta..." class="search-input w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-filter absolute left-3 top-3 text-gray-400"></i>
+                        <select id="statusFilter" class="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">Todos los estados</option>
+                            <option value="completada">Completadas</option>
+                            <option value="pendiente">Pendientes</option>
+                            <option value="cancelada">Canceladas</option>
+                        </select>
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-calendar-alt absolute left-3 top-3 text-gray-400"></i>
+                        <input type="date" id="dateFrom" class="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-calendar-alt absolute left-3 top-3 text-gray-400"></i>
+                        <input type="date" id="dateTo" class="w-full pl-10 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" />
+                    </div>
                 </div>
                 <div class="mt-4">
-                    <button id="clearFilters" class="w-full md:w-auto px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors">
+                    <button id="clearFilters" class="w-full md:w-auto px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors flex items-center justify-center">
                         <i class="fas fa-times mr-2"></i>Limpiar
                     </button>
                 </div>
@@ -144,28 +156,28 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                ID
+                                <i class="fas fa-hashtag"></i> ID
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Cliente
+                                <i class="fas fa-user"></i> Cliente
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Vendedor
+                                <i class="fas fa-user-tie"></i> Vendedor
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Fecha
+                                <i class="fas fa-calendar-day"></i> Fecha
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Total
+                                <i class="fas fa-money-bill-wave"></i> Total
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Método Pago
+                                <i class="fas fa-credit-card"></i> Método Pago
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Estado
+                                <i class="fas fa-flag"></i> Estado
                             </th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Acciones
+                                <i class="fas fa-cogs"></i> Acciones
                             </th>
                         </tr>
                     </thead>
@@ -173,7 +185,9 @@
                         @forelse($ventas as $venta)
                             <tr class="hover:bg-gray-50 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    #{{ $venta->id }}
+                                    <span class="inline-flex items-center gap-1">
+                                        <i class="fas fa-hashtag text-gray-400"></i> #{{ $venta->id }}
+                                    </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if ($venta->cliente)
@@ -270,7 +284,7 @@
                                                 class="inline">
                                                 @csrf
                                                 @method('PATCH')
-                                                <button type="submit" class="text-red-600 hover:text-red-900"
+                                                <button type="submit" class="text-red-600 hover:text-red-900 cursor-pointer"
                                                     title="Anular Venta">
                                                     <i class="fas fa-ban"></i>
                                                 </button>

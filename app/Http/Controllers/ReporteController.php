@@ -514,4 +514,13 @@ class ReporteController extends Controller
         }
         return $gananciaPorPeriodo;
     }
+
+    public function inventario()
+    {
+        // Productos sin stock
+        $productosSinStock = \App\Models\Producto::with('categoria')->where('stock', '<=', 0)->get();
+        // Top 10 productos con menor stock (para gráfico)
+        $productosCriticos = \App\Models\Producto::with('categoria')->orderBy('stock', 'asc')->limit(10)->get();
+        return view('reporte.inventario', compact('productosSinStock', 'productosCriticos'));
+    }
 }

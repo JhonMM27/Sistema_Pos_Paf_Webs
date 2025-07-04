@@ -174,30 +174,33 @@
 @section('contenido')
 <div class="receipt-main-container">
     <div class="print-section receipt-modern-container">
-        <div class="no-print p-4 border-b border-gray-200">
+        <div class="no-print p-4 border-b border-gray-200 flex items-center gap-2">
+            <i class="fas fa-receipt text-blue-600 text-2xl"></i>
             <h1 class="text-xl font-bold">Detalle de Venta</h1>
-            <ol class="breadcrumb mt-2 text-sm text-gray-500">
-                <li class="breadcrumb-item inline-block"><a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a></li>
-                <li class="breadcrumb-item inline-block mx-2">/</li>
-                <li class="breadcrumb-item inline-block"><a href="{{ route('ventas.index') }}" class="hover:underline">Ventas</a></li>
-                <li class="breadcrumb-item inline-block mx-2">/</li>
-                <li class="breadcrumb-item active inline-block">Recibo #{{ $venta->id }}</li>
-            </ol>
         </div>
+        <ol class="breadcrumb mt-2 text-sm text-gray-500 flex items-center gap-1">
+            <li class="breadcrumb-item inline-block"><i class="fas fa-home mr-1"></i><a href="{{ route('dashboard') }}" class="hover:underline">Dashboard</a></li>
+            <li class="breadcrumb-item inline-block mx-2">/</li>
+            <li class="breadcrumb-item inline-block"><i class="fas fa-cash-register mr-1"></i><a href="{{ route('ventas.index') }}" class="hover:underline">Ventas</a></li>
+            <li class="breadcrumb-item inline-block mx-2">/</li>
+            <li class="breadcrumb-item active inline-block"><i class="fas fa-receipt mr-1"></i>Recibo #{{ $venta->id }}</li>
+        </ol>
 
-        <div class="receipt-modern-header">
+        <div class="receipt-modern-header flex flex-col sm:flex-row items-center gap-4">
             <div class="receipt-logo">
                 <img src="{{ asset('img/Logo-Tienda.jpg') }}" alt="Logo de la Tienda">
             </div>
-            <div class="receipt-title">
+            <div class="receipt-title flex items-center gap-2">
+                <i class="fas fa-receipt text-blue-600 text-2xl"></i>
                 <h1>Recibo</h1>
             </div>
         </div>
 
         <div class="receipt-body">
             <div class="receipt-section info-section">
+                <h5 class="flex items-center gap-2"><i class="fas fa-info-circle text-indigo-500"></i> Información</h5>
                 <div class="info-grid">
-                    <p><strong>Nº de Recibo:</strong> #{{ $venta->id }}</p>
+                    <p><strong><i class="fas fa-hashtag mr-1"></i> Nº de Recibo:</strong> #{{ $venta->id }}</p>
                     <p><strong>Fecha y Hora:</strong> {{ $venta->fecha->format('d/m/Y h:i A') }}</p>
                     <p><strong>Vendedor:</strong> {{ $venta->vendedor->name ?? 'N/A' }}</p>
                     <p><strong>Método de Pago:</strong> {{ ucfirst($venta->metodo_pago) }}</p>
@@ -214,46 +217,45 @@
             </div>
             <h5>Resumen del Pedido</h5>
             
-            <div class="overflow-x-auto md:overflow-visible">
-                <table class="receipt-table min-w-full">
-                    <thead>
-                        <tr>
-                            <th>Producto</th>
-                            <th class="text-center">Cant.</th>
-                            <th class="text-right">P. Unitario</th>
-                            <th class="text-right">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($venta->detalles as $detalle)
-                        <tr>
-                            <td>{{ $detalle->producto->nombre ?? 'Producto no encontrado' }}</td>
-                            <td class="text-center">{{ $detalle->cantidad }}</td>
-                            <td class="text-right">S/ {{ number_format($detalle->precio_unitario, 2) }}</td>
-                            <td class="text-right">S/ {{ number_format($detalle->cantidad * $detalle->precio_unitario, 2) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="receipt-section">
+                <h5 class="flex items-center gap-2"><i class="fas fa-boxes text-purple-600"></i> Productos</h5>
+                <div class="overflow-x-auto md:overflow-visible">
+                    <table class="receipt-table min-w-full">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cant.</th>
+                                <th class="text-right">P. Unitario</th>
+                                <th class="text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($venta->detalles as $detalle)
+                            <tr>
+                                <td>{{ $detalle->producto->nombre ?? 'Producto no encontrado' }}</td>
+                                <td class="text-center">{{ $detalle->cantidad }}</td>
+                                <td class="text-right">S/ {{ number_format($detalle->precio_unitario, 2) }}</td>
+                                <td class="text-right">S/ {{ number_format($detalle->cantidad * $detalle->precio_unitario, 2) }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
             
 
             <div class="receipt-totals">
                 <table class="totals-table">
-                    @php
-                        $subtotal = $venta->total / 1.18;
-                        $igv = $venta->total - $subtotal;
-                    @endphp
                     <tr>
-                        <td class="total-label">Subtotal</td>
-                        <td class="text-right">S/ {{ number_format($subtotal, 2) }}</td>
+                        <td class="total-label flex items-center gap-2"><i class="fas fa-money-bill-wave text-green-600"></i> Subtotal:</td>
+                        <td class="text-right">S/ {{ number_format($venta->subtotal, 2) }}</td>
                     </tr>
                     <tr>
-                        <td class="total-label">IGV (18%)</td>
-                        <td class="text-right">S/ {{ number_format($igv, 2) }}</td>
+                        <td class="total-label flex items-center gap-2"><i class="fas fa-percentage text-yellow-500"></i> IGV (18%):</td>
+                        <td class="text-right">S/ {{ number_format($venta->igv, 2) }}</td>
                     </tr>
                     <tr class="grand-total">
-                        <td class="total-label">Total</td>
+                        <td class="total-label flex items-center gap-2"><i class="fas fa-coins text-blue-600"></i> TOTAL:</td>
                         <td class="text-right">S/ {{ number_format($venta->total, 2) }}</td>
                     </tr>
                 </table>
@@ -265,36 +267,9 @@
             <p>Si tiene alguna pregunta, contáctenos a info@tienda.com</p>
         </div>
         
-        <div class="action-buttons no-print text-center">
-            <div class="flex flex-wrap justify-center gap-4">
-                <button onclick="window.print()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
-                    <i class="fas fa-print mr-2"></i> Imprimir Recibo
-                </button>
-
-                <a href="{{ route('ventas.index') }}" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center">
-                    <i class="fas fa-check mr-2"></i> Volver al Listado
-                </a>
-
-                <a href="{{ route('ventas.create') }}" class="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center">
-                    <i class="fas fa-plus mr-2"></i> Nueva Venta
-                </a>
-
-                @if($venta->estado === 'completada')
-                    <a href="{{ route('devoluciones.create', $venta->id) }}" class="px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors flex items-center">
-                        <i class="fas fa-undo-alt mr-2"></i> Realizar Devolución
-                    </a>
-                @endif
-
-                @if($venta->estado !== 'anulada')
-                    <form action="{{ route('ventas.anular', $venta->id) }}" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de que quieres anular esta venta?')">
-                        @csrf
-                        @method('PATCH')
-                        <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center">
-                            <i class="fas fa-ban mr-2"></i> Anular Venta
-                        </button>
-                    </form>
-                @endif
-            </div>
+        <div class="action-buttons flex flex-wrap gap-3 justify-end">
+            <a href="{{ route('ventas.index') }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg flex items-center gap-2"><i class="fas fa-arrow-left"></i> Volver</a>
+            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"><i class="fas fa-print"></i> Imprimir</button>
         </div>
     </div>
 </div>

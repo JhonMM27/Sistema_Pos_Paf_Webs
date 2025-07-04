@@ -38,6 +38,13 @@
                     'color' => 'from-amber-500 to-orange-500',
                     'ruta' => route('reportes.ganancias')
                 ],
+                [
+                    'titulo' => 'Reporte de Inventario',
+                    'descripcion' => 'Productos sin stock y análisis de inventario crítico',
+                    'icono' => 'fas fa-box-open',
+                    'color' => 'from-red-500 to-yellow-500',
+                    'ruta' => route('reportes.inventario')
+                ],
             ];
         @endphp
 

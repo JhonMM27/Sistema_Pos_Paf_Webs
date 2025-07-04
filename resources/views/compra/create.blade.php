@@ -51,17 +51,19 @@
                             <i class="fas fa-barcode mr-2 text-blue-600"></i>
                             Lector de Códigos de Barras
                         </h2>
-                        <div class="relative">
-                            <input type="text" id="barcodeInput"
-                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
-                                placeholder="Escanea o ingresa el código de barras..." autocomplete="off">
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                <i class="fas fa-search text-gray-400"></i>
+                        <div class="flex items-center gap-2">
+                            <div class="relative flex-1">
+                                <input type="text" id="barcodeInput"
+                                    class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center"
+                                    placeholder="Escanea o ingresa el código de barras..." autocomplete="off">
                             </div>
+                            <button type="button" id="openCameraBtn" class="camera-scan-btn hidden">
+                                <i class="fas fa-camera"></i>
+                            </button>
                         </div>
                         <p class="text-sm text-gray-500 mt-2">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Escanea el producto o escribe el código y presiona Enter.
+                            El lector se activa automáticamente. Usa escáner físico o cámara en dispositivos móviles.
                         </p>
                     </div>
 
@@ -131,6 +133,46 @@
 
                 <!-- Columna Derecha -->
                 <div class="space-y-6">
+                    <!-- Card de productos sin stock y críticos -->
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg shadow-md p-4 sm:p-6 mb-4">
+                        <h2 class="text-lg font-semibold text-yellow-700 mb-2 flex items-center">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Productos sin stock y críticos
+                        </h2>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-xs divide-y divide-gray-200">
+                                <thead class="bg-yellow-100">
+                                    <tr>
+                                        <th class="px-2 py-1 text-left font-medium text-yellow-800 uppercase">Nombre</th>
+                                        <th class="px-2 py-1 text-left font-medium text-yellow-800 uppercase">Stock</th>
+                                        <th class="px-2 py-1 text-left font-medium text-yellow-800 uppercase">Compra</th>
+                                        <th class="px-2 py-1 text-left font-medium text-yellow-800 uppercase">Venta</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($productosSinStock as $producto)
+                                        <tr>
+                                            <td class="px-2 py-1 text-red-700 font-semibold">{{ $producto->nombre }}</td>
+                                            <td class="px-2 py-1 text-red-600 font-bold">{{ $producto->stock }}</td>
+                                            <td class="px-2 py-1">S/ {{ number_format($producto->precio_compra, 2) }}</td>
+                                            <td class="px-2 py-1">S/ {{ number_format($producto->precio, 2) }}</td>
+                                        </tr>
+                                    @endforeach
+                                    @foreach($productosCriticos as $producto)
+                                        @if($producto->stock > 0)
+                                        <tr>
+                                            <td class="px-2 py-1">{{ $producto->nombre }}</td>
+                                            <td class="px-2 py-1">{{ $producto->stock }}</td>
+                                            <td class="px-2 py-1">S/ {{ number_format($producto->precio_compra, 2) }}</td>
+                                            <td class="px-2 py-1">S/ {{ number_format($producto->precio, 2) }}</td>
+                                        </tr>
+                                        @endif
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <div class="bg-white rounded-lg shadow-md p-4 sm:p-6">
                         <h2 class="text-lg sm:text-xl font-semibold text-gray-800 mb-4">
                             <i class="fas fa-info-circle text-purple-600 mr-2"></i>
@@ -194,7 +236,7 @@
 
     <!-- Modal para agregar producto nuevo -->
     <div id="modalProductoNuevo"
-        class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity duration-300">
         <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 md:mx-6 sm:mx-2 overflow-y-auto max-h-[90vh]">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
                 <h3 class="text-lg font-semibold text-gray-800">Agregar Producto Nuevo</h3>
@@ -261,7 +303,19 @@
         </div>
     </div>
 
+    <!-- Modal para cámara -->
+    <div id="cameraModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 md:mx-6 sm:mx-2 overflow-y-auto max-h-[90vh] relative">
+            <button id="closeCameraBtn" class="absolute top-2 right-3 text-gray-500 hover:text-red-500">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+            <div id="cameraPreview"></div>
+            <p class="text-center text-sm text-gray-600 mt-2">Escanea el código con la cámara</p>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
     @if (session('success'))
         <script>
@@ -394,6 +448,68 @@
                     return false;
                 }
             });
+
+            const openCameraBtn = document.getElementById('openCameraBtn');
+            const cameraModal = document.getElementById('cameraModal');
+            const closeCameraBtn = document.getElementById('closeCameraBtn');
+            const cameraPreview = document.getElementById('cameraPreview');
+            // Mostrar botón de cámara solo en dispositivos móviles
+            if (window.innerWidth < 1024) {
+                openCameraBtn.classList.remove('hidden');
+            }
+            openCameraBtn.addEventListener('click', function() {
+                cameraModal.classList.remove('hidden');
+                cameraPreview.innerHTML = "";
+                if (window.html5QrCodeScanner) {
+                    window.html5QrCodeScanner.stop().then(() => {
+                        iniciarCamara();
+                    }).catch(() => iniciarCamara());
+                } else {
+                    iniciarCamara();
+                }
+            });
+            closeCameraBtn.addEventListener('click', function() {
+                cameraModal.classList.add('hidden');
+                if (window.html5QrCodeScanner) {
+                    window.html5QrCodeScanner.stop().then(() => {
+                        cameraPreview.innerHTML = "";
+                    });
+                } else {
+                    cameraPreview.innerHTML = "";
+                }
+            });
+            function iniciarCamara() {
+                const html5QrCode = new Html5Qrcode("cameraPreview");
+                window.html5QrCodeScanner = html5QrCode;
+                Html5Qrcode.getCameras().then(devices => {
+                    if (devices && devices.length) {
+                        html5QrCode.start(
+                            { facingMode: "environment" },
+                            {
+                                fps: 10,
+                                qrbox: { width: 250, height: 250 }
+                            },
+                            (decodedText, decodedResult) => {
+                                document.getElementById('barcodeInput').value = decodedText;
+                                // Simular Enter para buscar producto
+                                const event = new KeyboardEvent('keypress', { key: 'Enter' });
+                                document.getElementById('barcodeInput').dispatchEvent(event);
+                                cameraModal.classList.add('hidden');
+                                html5QrCode.stop().then(() => {
+                                    cameraPreview.innerHTML = "";
+                                });
+                            },
+                            (errorMessage) => {
+                                // console.log(errorMessage);
+                            }
+                        ).catch(err => {
+                            cameraPreview.innerHTML = '<p class="text-red-500 text-center">No se pudo acceder a la cámara</p>';
+                        });
+                    } else {
+                        cameraPreview.innerHTML = '<p class="text-red-500 text-center">No se encontró cámara disponible</p>';
+                    }
+                });
+            }
         });
 
         function buscarProductoPorCodigo(codigo, exactMatch = false) {
