@@ -72,6 +72,7 @@ class UsuarioSeeder extends Seeder
         $salesPermisos = [
             // Ventas, clientes, ver productos/categorías, ver reportes
             'venta-listar', 'venta-crear', 'venta-anular', 'venta-activar', 'venta-ver',
+            'devolucion-listar', 'devolucion-crear', 'devolucion-ver',
             'cliente-listar', 'cliente-crear', 'cliente-editar', 'cliente-ver',
             'producto-listar', 'categoria-listar',
             'reporte-generar', 'reporte-ver',

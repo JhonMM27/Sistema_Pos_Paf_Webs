@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             icon: "fa-cash-register", 
             color: "from-green-500 to-emerald-500", 
             description: "Gestiona tus ventas y transacciones", 
-            roles: ['Administrador', 'manager', 'sales'], 
+            roles: ['Administrador', 'manager', 'Vendedor'], 
             url: "{{route('ventas.index')}}" 
         },
         { 
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
             icon: "fa-users", 
             color: "from-indigo-500 to-violet-500", 
             description: "Administra tu base de clientes", 
-            roles: ['Administrador', 'manager', 'sales'], 
+            roles: ['Administrador', 'manager', 'Vendedor'], 
             url: "{{route('clientes.index')}}" 
         },
         { 

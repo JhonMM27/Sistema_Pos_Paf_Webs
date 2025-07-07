@@ -345,7 +345,7 @@
                         'icon' => 'fa-users',
                         'color' => 'text-indigo-300',
                         'hover' => 'hover:bg-indigo-800/30',
-                        'roles' => ['Administrador', 'manager', 'sales'],
+                        'roles' => ['Administrador', 'manager', 'Vendedor'],
                         'url' => route('clientes.index'),
                         'active' => request()->routeIs('clientes.*'),
                     ],
